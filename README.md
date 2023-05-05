@@ -1,9 +1,20 @@
 # 2023GL104350
 
-This code base is using the [Julia Language](https://julialang.org/) and
-[DrWatson](https://juliadynamics.github.io/DrWatson.jl/stable/)
-to make a reproducible scientific project named
-> 2023GL104350
+This repository contains the scripts needed to extract the relevant data from the
+[ExploreWTGSpace](https://github.com/natgeo-wong/ExploreWTGSpace) project, and the
+notebooks needed to create the figures in the paper submission to GRL with the ID
+`2023GL104350`.
+
+This project will also contain the necessary experimental setup files, so that
+anyone who wants will be able to run the model to get all the output.  They can
+then explore the full range of the project themselves.
+
+It is unconfirmed, but if the necessary data required to extract the data is small
+enough, then the data will be ported over to this repository as well.  Otherwise,
+the data will be uploaded to either Harvard Dataverse or to another GitHub repo,
+which will be linked here at a later date.
+
+## Instructions (to be updated later)
 
 To (locally) reproduce this project, do the following:
 
