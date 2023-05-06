@@ -9,15 +9,16 @@ function extractprecip(
     expname :: String,
     runname :: String;
     nt      :: Int = 2000,
-    tperday :: Int = 1
+    tperday :: Int = 1,
+    nmember :: Int = 15,
 )
 
-    prcp = zeros(nt,15) * NaN
+    prcp = zeros(nt,nmember) * NaN
     t = 0 : nt
     t = collect(t[1:(end-1)] .+ t[2:end]) / 2
     t = t / tperday
 
-    for ids = 1 : 15
+    for ids = 1 : nmember
 
         ensemble = @sprintf("%02d",ids)
         @info "$(Dates.now()) - Opening $(datadir(
@@ -44,7 +45,7 @@ function extractprecip(
     ))
 
     nds.dim["time"] = nt
-    nds.dim["ensemble"] = 15
+    nds.dim["ensemble"] = nmember
 
     nctime = defVar(nds,"time",Float64,("time",),attrib = Dict(
         "units"     => "days after model-day 0",
@@ -68,15 +69,16 @@ function extractprecip(
     schname :: String,
     expname :: String;
     nt      :: Int = 2000,
-    tperday :: Int = 1
+    tperday :: Int = 1,
+    nmember :: Int = 15,
 )
 
-    prcp = zeros(nt,15) * NaN
+    prcp = zeros(nt,nmember) * NaN
     t = 0 : nt
     t = collect(t[1:(end-1)] .+ t[2:end]) / 2
     t = t / tperday
 
-    for ids = 1 : 15
+    for ids = 1 : nmember
 
         ensemble = @sprintf("%02d",ids)
         @info "$(Dates.now()) - Opening $(datadir(
@@ -103,7 +105,7 @@ function extractprecip(
     ))
 
     nds.dim["time"] = nt
-    nds.dim["ensemble"] = 15
+    nds.dim["ensemble"] = nmember
 
     nctime = defVar(nds,"time",Float64,("time",),attrib = Dict(
         "units"     => "days after model-day 0",
