@@ -80,10 +80,17 @@ function extract2D(
         "full_name" => "Fraction of Area with Rainfall"
     ))
 
+    ncpr = defVar(nds,"rainarearate",Float64,("time","ensemble"),attrib = Dict(
+        "units"     => "mm day**-1",
+        "long_name" => "precipitation_rate_in_precipitating_area",
+        "full_name" => "Precipitation Rate in Precipitating Area"
+    ))
+
     nctime[:] = t
     ncolr[:]  = olr
     ncpw[:]   = pw
-    ncra[:]   = pr
+    ncra[:]   = pa
+    ncpr[:]   = pr
 
     close(nds)
 
@@ -164,10 +171,17 @@ function extract2D(
         "full_name" => "Fraction of Area with Rainfall"
     ))
 
+    ncpr = defVar(nds,"rainarearate",Float64,("time","ensemble"),attrib = Dict(
+        "units"     => "mm day**-1",
+        "long_name" => "precipitation_rate_in_precipitating_area",
+        "full_name" => "Precipitation Rate in Precipitating Area"
+    ))
+
     nctime[:] = t
     ncolr[:]  = olr
     ncpw[:]   = pw
-    ncra[:]   = pr
+    ncra[:]   = pa
+    ncpr[:]   = pr
 
     close(nds)
 
