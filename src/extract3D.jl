@@ -14,7 +14,6 @@ function extract3D(
     nmember :: Int = 15,
 )
 
-    wwtg = zeros(64,nt,nmember) * NaN
     tabs = zeros(64,nt,nmember) * NaN
     shum = zeros(64,nt,nmember) * NaN
     z = zeros(64,nmember) * NaN
@@ -37,7 +36,6 @@ function extract3D(
         nit = ods.dim["time"]
         z[:,ids] .= ods["z"][:]
         p[:,ids] .= ods["p"][:]
-        wwtg[:,1:nit,ids] .= ods["WWTG"][:]
         tabs[:,1:nit,ids] .= ods["TABS"][:]
         shum[:,1:nit,ids] .= ods["QV"][:] ./ 1000
         close(ods)
@@ -72,12 +70,6 @@ function extract3D(
         "full_name" => "pressure_level"
     ))
 
-    ncwwtg = defVar(nds,"wwtg",Float64,("level","time","ensemble"),attrib = Dict(
-        "units"     => "m s**-1",
-        "long_name" => "weak_temperature_gradient_vertical_velocity",
-        "full_name" => "WTG Vertical Velocity"
-    ))
-
     nctabs = defVar(nds,"t",Float64,("level","time","ensemble"),attrib = Dict(
         "units"     => "K",
         "long_name" => "temperature",
@@ -93,7 +85,6 @@ function extract3D(
     nctime[:] = t
     ncz[:] = dropdims(mean(z,dims=2),dims=2)
     ncp[:] = dropdims(mean(p,dims=2),dims=2)
-    ncwwtg[:]  = wwtg
     nctabs[:]  = tabs
     ncshum[:]  = shum
 
@@ -109,7 +100,6 @@ function extract3D(
     nmember :: Int = 15,
 )
 
-    wwtg = zeros(64,nt,nmember) * NaN
     tabs = zeros(64,nt,nmember) * NaN
     shum = zeros(64,nt,nmember) * NaN
     z = zeros(64,nmember) * NaN
@@ -132,7 +122,6 @@ function extract3D(
         nit = ods.dim["time"]
         z[:,ids] .= ods["z"][:]
         p[:,ids] .= ods["p"][:]
-        wwtg[:,1:nit,ids] .= ods["WWTG"][:]
         tabs[:,1:nit,ids] .= ods["TABS"][:]
         shum[:,1:nit,ids] .= ods["QV"][:] ./ 1000
         close(ods)
@@ -167,12 +156,6 @@ function extract3D(
         "full_name" => "pressure_level"
     ))
 
-    ncwwtg = defVar(nds,"wwtg",Float64,("level","time","ensemble"),attrib = Dict(
-        "units"     => "m s**-1",
-        "long_name" => "weak_temperature_gradient_vertical_velocity",
-        "full_name" => "WTG Vertical Velocity"
-    ))
-
     nctabs = defVar(nds,"t",Float64,("level","time","ensemble"),attrib = Dict(
         "units"     => "K",
         "long_name" => "temperature",
@@ -188,7 +171,6 @@ function extract3D(
     nctime[:] = t
     ncz[:] = dropdims(mean(z,dims=2),dims=2)
     ncp[:] = dropdims(mean(p,dims=2),dims=2)
-    ncwwtg[:]  = wwtg
     nctabs[:]  = tabs
     ncshum[:]  = shum
 
