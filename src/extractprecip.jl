@@ -35,7 +35,7 @@ function extractprecip(
 
     end
 
-    fnc = datadir("$(schname)-$(expname)-$(runname).nc")
+    fnc = datadir("precipitation","$(schname)-$(expname)-$(runname).nc")
     if isfile(fnc); rm(fnc,force=true) end
 
     nds = NCDataset(fnc,"c",attrib = Dict(
@@ -95,7 +95,7 @@ function extractprecip(
 
     end
 
-    fnc = datadir("$(schname)-$(expname).nc")
+    fnc = datadir("precipitation","$(schname)-$(expname).nc")
     if isfile(fnc); rm(fnc,force=true) end
 
     nds = NCDataset(fnc,"c",attrib = Dict(
