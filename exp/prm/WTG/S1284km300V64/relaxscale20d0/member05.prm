@@ -1,0 +1,117 @@
+&PARAMETERS
+
+caseid ='ExploreWTGSpace-S1284km300V64-member05',
+
+dx = 4000.,
+dy = 4000.,
+dt = 30.,
+
+doensemble    = .true.,
+nensemble     = 5,
+nrestart      = 0,
+nrestart_skip = 239,
+perturb_type  = 0,
+
+CEM   = .true.,
+OCEAN = .true.,
+
+dosgs            = .true.,
+dodamping        = .true.,
+doupperbound     = .true.,
+docloud          = .true.,
+doprecip         = .true.,
+dolongwave       = .false.,
+doshortwave      = .false.,
+dosurface        = .true.,
+dodynamicocean   = .false.,
+dolargescale     = .true.,
+doradforcing     = .false.,
+doradhomo        = .false.,
+dosfcforcing     = .false.,
+docoriolis       = .false.,
+donudging_uv     = .true.,
+donudging_tq     = .false.,
+
+tauls = 3600.,
+
+SFC_FLX_FXD = .false.,
+SFC_TAU_FXD = .false.,
+
+longitude0 = 0.,
+latitude0  = 0.,
+day0       = 0.,
+tabs_s     = 300.,
+Szero      = 0,
+
+depth_slab_ocean = 1.,
+
+nrad = 12,
+
+! note: insolation = solar_constant*cos(zenith_angle)
+! below values are equivalent to insolation = 423.4773 W/m2
+!   coszrs = 0.732650
+
+doperpetual     = .true.,
+doseasons       = .false.,
+dosolarconstant = .true.,
+zenith_angle    = 0.0,
+solar_constant  = 431.06,
+
+doisccp = .false.,
+domodis = .false.,
+domisr  = .false.,
+
+nstop    = 720000,
+nprint   = 2880,
+nstat    = 360,     ! Calculate statistics every hour!
+nstatfrq = 36,     ! Collect 60 samples per statistical calculation (every 1 minute)
+
+doSAMconditionals     = .false.,
+dosatupdnconditionals = .false.,
+
+nsave2D      = 120,
+nsave2Dstart = 9999999,
+nsave2Dend   = 999999999,
+save2Dbin    = .true.,
+save2Davg    = .true.,
+
+nsave3D      = 120,
+nsave3Dstart = 9999999,
+nsave3Dend   = 999999999,
+save3Dbin    = .true.,
+rad3Dout     = .true.,
+
+/
+
+&UWOPTIONS
+
+compute_advection_everywhere = .true.,
+
+dowtg_blossey_etal_JAMES2009 = .false., ! alternate implementation
+am_wtg  = 1.,                           ! momentum damping rate in day^-1, default= 1.,
+am_wtg_exp = 0.,                        ! exponent of p/p0 in momentum damping rate.
+lambda_wtg = 650.e3,                    ! quarter wavelength in m. default = 650.e3 m
+
+doFixedWindSpeedForSurfaceFluxes = .true.,
+WindSpeedForFluxes               = 5.,
+
+/
+
+&KUANG_OPTIONS
+
+dowtg_raymondzeng_QJRMS2005 = .true.
+dowtg_daleuetal_JAMES2015   = .false.
+dowtg_decompdgw             = .false.
+dowtg_decomptgr             = .false.
+
+wtgscale_vertmodenum = 2      ! number of vertical modes
+wtgscale_vertmodescl = 1., 1. ! wtg strength scaling for vertical modes
+wtgscale_time        = 0.2
+
+tau_wtg      =  20.000000
+dthetadz_min = 1.e-3
+dowtgLBL     = .false.
+
+doradtendency = .true.,
+
+/
