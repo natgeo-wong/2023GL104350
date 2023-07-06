@@ -12,7 +12,7 @@ nrestart      = 0,
 nrestart_skip = 239,
 perturb_type  = 0,
 
-CEM   = .true.,
+LES_S = .false.,
 OCEAN = .true.,
 
 dosgs            = .true.,
@@ -61,7 +61,7 @@ doisccp = .false.,
 domodis = .false.,
 domisr  = .false.,
 
-nstop    = 2880000,
+nstop    = 5760000,
 nprint   = 2880,
 nstat    = 2880,    ! Calculate statistics every hour!
 nstatfrq = 288,     ! Collect 60 samples per statistical calculation (every 1 minute)
@@ -72,26 +72,19 @@ dosatupdnconditionals = .false.,
 nsave2D      = 120,
 nsave2Dstart = 9999999,
 nsave2Dend   = 999999999,
-save2Dbin    = .true.,
 save2Davg    = .true.,
 
 nsave3D      = 120,
 nsave3Dstart = 9999999,
 nsave3Dend   = 999999999,
-save3Dbin    = .true.,
 rad3Dout     = .true.,
 
 /
 
-&UWOPTIONS
+&KUANG_PARAMS
 
-doFixedWindSpeedForSurfaceFluxes = .true.,
-WindSpeedForFluxes               = 5.,
-
-/
-
-&KUANG_OPTIONS
-
-doradtendency    = .true.,
+doradtendency = .true.,
+dobulksfcflx  = .true.,
+bulksfcflx_u  = 5.
 
 /

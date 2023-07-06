@@ -7,34 +7,40 @@ include(srcdir("sam.jl"))
 
 expname = "P1282km300V64"
 tprm  = projectdir("exp","tmp.prm")
-plist1 = [0,0.2,0.5,1,2,5,10,20,50,100,200,500]
-plist2 = [0,0.02,0.05,0.1,0.2,0.5,1,2,5,10,20,50,100,200,500]
+plist1 = [
+    0,sqrt(2),2,2*sqrt(2.5),5,5*sqrt(2),
+    10,10*sqrt(2),20,20*sqrt(2.5),50,50*sqrt(2),
+]
+plist2 = vcat(
+    plist1/100,1,
+    plist1
+)
 
 for powerii in plist1
-    conii = dampingstrprnt(powerii)
-    mkpath(projectdir("exp","prm","DGW",expname,conii))
+    conii = relaxscalestrprnt(powerii)
+    mkpath(projectdir("exp","prm","SPC",expname,conii))
     for imember = 1 : 15
         mstr = @sprintf("%02d",imember)
-        oprm = projectdir("scripts","modifysam","prm","DGW_$(expname).prm")
-        nprm = projectdir("exp","prm","DGW",expname,conii,"member$(mstr).prm")
+        oprm = projectdir("scripts","modifysam","prm","SPC_$(expname).prm")
+        nprm = projectdir("exp","prm","SPC",expname,conii,"member$(mstr).prm")
         open(tprm,"w") do fprm
             open(oprm,"r") do rprm
                 s = read(rprm,String)
                 s = replace(s,"[xx]" => mstr)
                 s = replace(s,"[en]" => "$(imember)")
-                s = replace(s,"[tau]" => @sprintf("%7e",1))
+                s = replace(s,"[am]" => @sprintf("%7e",1))
                 if !iszero(powerii)
                     s = replace(s,"[bool]" => "true")
-                    s = replace(s,"[am]" => @sprintf("%7e",powerii))
+                    s = replace(s,"[tau]" => @sprintf("%7e",powerii))
                 else
                     s = replace(s,"[bool]" => "false")
-                    s = replace(s,"[am]" => @sprintf("%7e",1))
+                    s = replace(s,"[tau]" => @sprintf("%7e",1))
                 end
                 write(fprm,s)
             end
         end
-        mkpath(projectdir("exp","prm","DGW",expname,conii))
+        mkpath(projectdir("exp","prm","SPC",expname,conii))
         mv(tprm,nprm,force=true)
-        @info "Creating new prm file for DGW $expname $conii ensemble member $imember"
+        @info "Creating new prm file for SPC $expname $conii ensemble member $imember"
     end
 end

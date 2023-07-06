@@ -1,26 +1,10 @@
 using NCDatasets
-using NumericalIntegration
 using Printf
 using Statistics
+using Trapz
 
-function dampingstrprnt(am::Real)
-    if am >= 1
-        str = @sprintf("%04d",am)[2:end]
-    else
-        str = @sprintf("%04.2f",am)
-        str = replace(str,"."=>"d")[2:end]
-    end
-    return str
-end
-
-function relaxscalestrprnt(tau::Real)
-    if tau >= 0.1
-        str = "relaxscale$(@sprintf("%05.1f",tau)[2:end])"
-    else
-        str = "relaxscale$(@sprintf("%05.3f",tau)[2:end])"
-    end
-    return replace(str,"."=>"d")
-end
+dampingstrprnt(am::Real)     = replace(   "damping$(@sprintf("%06.2f",am ))","."=>"d")
+relaxscalestrprnt(tau::Real) = replace("relaxscale$(@sprintf("%06.3f",tau))","."=>"d")
 
 function outstatname(
     scheme  :: AbstractString,
@@ -162,7 +146,7 @@ function calcswp(RH,QV,P)
 
     for it = 1 : nt
 		QVsat[2:end] .= reverse(QV[:,it]) ./ reverse(RH[:,it])
-		swp[it] = integrate(pvec,QVsat) / 9.81 / 1000
+		swp[it] = trapz(pvec,QVsat) / 9.81 / 1000
     end
 
 	return swp

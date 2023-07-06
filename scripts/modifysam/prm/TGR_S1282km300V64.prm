@@ -1,18 +1,18 @@
 &PARAMETERS
 
-caseid ='ExploreWTGSpace-S1284km300V64-member07',
+caseid ='ExploreWTGSpace-S1282km300V64-member[xx]',
 
-dx = 4000.,
-dy = 4000.,
+dx = 2000.,
+dy = 2000.,
 dt = 30.,
 
 doensemble    = .true.,
-nensemble     = 7,
+nensemble     = [en],
 nrestart      = 0,
 nrestart_skip = 239,
 perturb_type  = 0,
 
-LES_S = .false.,
+CEM   = .true.,
 OCEAN = .true.,
 
 dosgs            = .true.,
@@ -24,12 +24,12 @@ dolongwave       = .false.,
 doshortwave      = .false.,
 dosurface        = .true.,
 dodynamicocean   = .false.,
-dolargescale     = .false.,
+dolargescale     = .[bool].,
 doradforcing     = .false.,
 doradhomo        = .false.,
 dosfcforcing     = .false.,
 docoriolis       = .false.,
-donudging_uv     = .false.,
+donudging_uv     = .true.,
 donudging_tq     = .false.,
 
 tauls = 3600.,
@@ -61,10 +61,10 @@ doisccp = .false.,
 domodis = .false.,
 domisr  = .false.,
 
-nstop    = 5760000,
+nstop    = 720000,
 nprint   = 2880,
-nstat    = 2880,    ! Calculate statistics every hour!
-nstatfrq = 288,     ! Collect 60 samples per statistical calculation (every 1 minute)
+nstat    = 120,     ! Calculate statistics every hour!
+nstatfrq = 60,     ! Collect 60 samples per statistical calculation (every 1 minute)
 
 doSAMconditionals     = .false.,
 dosatupdnconditionals = .false.,
@@ -86,5 +86,24 @@ rad3Dout     = .true.,
 doradtendency = .true.,
 dobulksfcflx  = .true.,
 bulksfcflx_u  = 5.
+
+dowtg_blossey_etal_JAMES2009  = .false.
+dowtg_raymondzeng_QJRMS2005   = .[bool].
+dowtg_hermanraymond_JAMES2014 = .false.
+dowtg_decompdgw               = .false.
+dowtg_decomptgr               = .false.
+
+wtgscale_time        = 0.1
+
+am_wtg               = [am] ! momentum damping rate in day^-1, default= 1.,
+am_wtg_exp           = 0.,          ! exponent of p/p0 in momentum damping rate.
+lambda_wtg           = 650.e3,      ! quarter wavelength in m. default = 650.e3 m
+
+tau_wtg              = [tau] ! temperature relaxation in hours, default= 1.,
+dthetadz_min         = 1.e-3
+dowtgLBL             = .false.
+
+wtgscale_vertmodenum = 2      ! number of vertical modes
+wtgscale_vertmodescl = 1., 1. ! wtg strength scaling for vertical modes
 
 /

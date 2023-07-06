@@ -10,7 +10,7 @@ nrestart      = 0,
 nrestart_skip = 23,
 perturb_type  = 0,
 
-CEM   = .true.,
+LES_S = .false.,
 OCEAN = .true.,
 
 dosgs            = .true.,
@@ -70,26 +70,19 @@ dosatupdnconditionals = .false.,
 nsave2D      = 120,
 nsave2Dstart = 9999999,
 nsave2Dend   = 999999999,
-save2Dbin    = .true.,
 save2Davg    = .true.,
 
 nsave3D      = 120,
 nsave3Dstart = 9999999,
 nsave3Dend   = 999999999,
-save3Dbin    = .true.,
 rad3Dout     = .true.,
 
 /
 
-&UWOPTIONS
+&KUANG_PARAMS
 
-doFixedWindSpeedForSurfaceFluxes = .true.,
-WindSpeedForFluxes               = 5.,
-
-/
-
-&KUANG_OPTIONS
-
-doradtendency    = .true.,
+doradtendency = .true.,
+dobulksfcflx  = .true.,
+bulksfcflx_u  = 5.
 
 /
