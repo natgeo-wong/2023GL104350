@@ -4,12 +4,8 @@ using Printf
 using Statistics
 
 function dampingstrprnt(am::Real)
-    if am >= 1
-        str = @sprintf("%04d",am)[2:end]
-    else
-        str = @sprintf("%04.2f",am)
-        str = replace(str,"."=>"d")[2:end]
-    end
+    str = "damping$(@sprintf("%06.2f",am))"
+    str = replace(str,"."=>"d")
     return str
 end
 
