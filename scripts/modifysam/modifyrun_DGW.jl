@@ -9,8 +9,8 @@ pwrvec1 = [0,0.2,0.5,1,2,5,10,20,50,100,200,500]
 pwrvec2 = [0,0.02,0.05,0.1,0.2,0.5,1,2,5,10,20,50,100,200,500]
 pwrvec  = pwrvec1
 
-mrun = projectdir("run","modelrun.sh")
-brun = projectdir("run","Build.csh")
+mrun = projectdir("run","modifysam","runtemplates","modelrun.sh")
+brun = projectdir("run","modifysam","runtemplates","Build.csh")
 
 open(mrun,"r") do frun
     s = read(frun,String)

@@ -12,8 +12,8 @@ pwrvec1 = [
 pwrvec2 = vcat(plist1/100,1,plist1)
 pwrvec  = pwrvec1
 
-mrun = projectdir("run","modelrun.sh")
-brun = projectdir("run","Build.csh")
+mrun = projectdir("run","modifysam","runtemplates","modelrun.sh")
+brun = projectdir("run","modifysam","runtemplates","Build.csh")
 
 open(mrun,"r") do frun
     s = read(frun,String)
