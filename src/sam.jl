@@ -1,7 +1,7 @@
 using NCDatasets
-using NumericalIntegration
 using Printf
 using Statistics
+using Trapz
 
 function dampingstrprnt(am::Real)
     str = "damping$(@sprintf("%06.2f",am))"
@@ -158,7 +158,7 @@ function calcswp(RH,QV,P)
 
     for it = 1 : nt
 		QVsat[2:end] .= reverse(QV[:,it]) ./ reverse(RH[:,it])
-		swp[it] = integrate(pvec,QVsat) / 9.81 / 1000
+		swp[it] = trapz(pvec,QVsat) / 9.81 / 1000
     end
 
 	return swp
