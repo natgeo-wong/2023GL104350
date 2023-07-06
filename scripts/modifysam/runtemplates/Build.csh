@@ -4,7 +4,7 @@
 # restart and large output data file will be located :
 
 #setenv SAM_SCR `pwd`
-setenv SAM_SCR /n/holylfs04/LABS/kuang_lab/Users/[user]/ExploreWTGSpace/data/[schname]/[expname]/[runname]
+setenv SAM_SCR [directory]/[user]/2023GL104350/data/[schname]/[expname]/[runname]
 
 # ----------------------------------
 # specify scalar-advection directory in SRC
@@ -43,7 +43,7 @@ setenv GNUMAKE 'make -j8'
 setenv SAM_DIR  `pwd`
 setenv SAM_OBJ  $SAM_SCR/OBJ
 #setenv SAM_SRC  `pwd`/SRC
-setenv SAM_SRC  /n/home07/nwong/SAM/SRC_v6.10
+setenv SAM_SRC  /n/home07/nwong/SAM/SRC_v6.11
 
 if !(-d $SAM_SCR) mkdir -p $SAM_SCR
 
@@ -99,18 +99,14 @@ cd $SAM_OBJ
 if ( !(-e Filepath) ) then
 cat >! Filepath << EOF
 $SAM_SRC
+$SAM_SRC/$MICRO_DIR
 $SAM_SRC/$ADV_DIR
 $SAM_SRC/$SGS_DIR
 $SAM_SRC/$RAD_DIR
-$SAM_SRC/$MICRO_DIR
 $SAM_SRC/SIMULATORS
-$SAM_SRC/QUICKBEAM
-$SAM_SRC/TIMING
-$SAM_SRC/LAPACK_BLAS_UTILS
+$SAM_SRC/SLM
 EOF
 endif
 
 
 $GNUMAKE -f $SAM_DIR/Makefile
-
-

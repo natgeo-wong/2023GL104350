@@ -5,8 +5,11 @@ using Printf
 include(srcdir("sam.jl"))
 
 expname = "P1282km300V64"
-pwrvec1 = [0,0.2,0.5,1,2,5,10,20,50,100,200,500]
-pwrvec2 = [0,0.02,0.05,0.1,0.2,0.5,1,2,5,10,20,50,100,200,500]
+pwrvec1 = [
+    0,sqrt(2),2,2*sqrt(2.5),5,5*sqrt(2),
+    10,10*sqrt(2),20,20*sqrt(2.5),50,50*sqrt(2),
+]
+pwrvec2 = vcat(plist1/100,1,plist1)
 pwrvec  = pwrvec1
 
 mrun = projectdir("run","modelrun.sh")
@@ -16,12 +19,12 @@ open(mrun,"r") do frun
     s = read(frun,String)
     for pwrii in pwrvec
 
-        pwrname = dampingstrprnt(pwrii)
+        pwrname = relaxscalestrprnt(pwrii)
 
         for ensembleii in 1 : 15
 
             mstr = @sprintf("%02d",ensembleii)
-            nrun = projectdir("run","DGW",expname,pwrname,"ensemble$(mstr).sh")
+            nrun = projectdir("run","TGR",expname,pwrname,"ensemble$(mstr).sh")
 
             open(nrun,"w") do wrun
                 sn = replace(s ,"[email]"=>"")
@@ -37,7 +40,7 @@ open(mrun,"r") do frun
                     sn = replace(sn,"[sndname]"=>"$(expname)_cld")
                 end
                 sn = replace(sn,"[lsfname]"=>"noforcing")
-                sn = replace(sn,"[schname]"=>"DGW")
+                sn = replace(sn,"[schname]"=>"TGR")
                 sn = replace(sn,"member[xx]"=>"member$(mstr)")
                 write(wrun,sn)
             end
@@ -51,12 +54,12 @@ open(brun,"r") do frun
     s = read(frun,String)
     for pwrii in pwrvec
 
-        pwrname = dampingstrprnt(pwrii)
-        nrun = projectdir("run","DGW",expname,pwrname,"Build.csh")
+        pwrname = relaxscalestrprnt(pwrii)
+        nrun = projectdir("run","TGR",expname,pwrname,"Build.csh")
 
         open(nrun,"w") do wrun
             sn = replace(s ,"[user]"=>"")
-            sn = replace(sn,"[schname]"=>"DGW")
+            sn = replace(sn,"[schname]"=>"TGR")
             sn = replace(sn,"[expname]"=>"$(expname)")
             sn = replace(sn,"[runname]"=>"$(pwrname)")
             write(wrun,sn)
