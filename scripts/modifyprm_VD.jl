@@ -4,28 +4,32 @@ using Printf
 
 # include(srcdir("sam.jl"))
 
-schname = "VDT"
+schname = "VDD"
 tprm  = projectdir("exp","tmp.prm")
-expvec = [
-    "H0d00F1d00","H0d50F1d00","H1d00F1d00",
-    "H1d00F0d50","H1d00F0d40","H1d00F0d30",
-    "H1d00F0d20","H1d00F0d10","H1d00F0d00"
-]
+avec = [1  1   1   1    1   1   1  1 0.5 0]
+bvec = [0 0.1 0.2 0.25 0.3 0.4 0.5 1  1  1]
+nexp = length(avec)
 
-for expname in expvec
+for iexp in 1 : nexp
+    astr = replace(@sprintf("%04.2f",avec[iexp]),"."=>"d")
+    bstr = replace(@sprintf("%04.2f",bvec[iexp]),"."=>"d")
+    expname = "H$(astr)F$(bstr)"
     mkpath(projectdir("exp","prm",schname,expname))
     for imember = 1 : 15
-        oprm  = projectdir("exp","prm",schname,expname,"member01.prm")
+        oprm = projectdir("scripts","modifysam","prm","$schname.prm")
         nprm  = projectdir("exp","prm",schname,expname,"member$(@sprintf("%02d",imember)).prm")
         open(tprm,"w") do fprm
             open(oprm,"r") do rprm
                 s = read(rprm,String)
-                s = replace(s,"S1284km300V64"=>expname)
-                s = replace(s,"member01"=>"member$(@sprintf("%02d",imember))")
-                s = replace(s,"nensemble     = 1,"=>"nensemble     = $(imember),")
+                s = replace(s,"[expname]" => expname)
+                s = replace(s,"[xx]"      => @sprintf("%02d",imember))
+                s = replace(s,"[en]"      => "$(imember)")
+                s = replace(s,"[aa]"      => "$(avec[iexp])")
+                s = replace(s,"[bb]"      => "$(bvec[iexp])")
                 write(fprm,s)
             end
         end
         mv(tprm,nprm,force=true)
+        @info "Creating new prm file for $schname $expname ensemble member $imember"
     end
 end
