@@ -82,7 +82,6 @@ rad3Dout     = .true.,
 &KUANG_PARAMS
 
 doradtendency = .true.,
-
 dobulksfcflx  = .true.,
 bulksfcflx_u  = 5.
 
