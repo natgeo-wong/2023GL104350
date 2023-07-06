@@ -13,11 +13,7 @@ papers/
 references/**/*.pdf
 run/
 exp/run_*
-exp/prm/DGW/
-exp/prm/TGR/
-exp/prm/SPC/
-exp/prm/VDD/
-exp/prm/VDT/
+exp/prm/
 *.gif
 *.mp4
 *.github

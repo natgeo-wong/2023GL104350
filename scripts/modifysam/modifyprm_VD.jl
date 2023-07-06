@@ -1,5 +1,6 @@
 using DrWatson
 @quickactivate "2023GL104350"
+using Logging
 using Printf
 
 # include(srcdir("sam.jl"))
@@ -16,7 +17,7 @@ for iexp in 1 : nexp
     expname = "H$(astr)F$(bstr)"
     mkpath(projectdir("exp","prm",schname,expname))
     for imember = 1 : 15
-        oprm = projectdir("scripts","modifysam","prm","$schname.prm")
+        oprm = projectdir("scripts","modifysam","prmtemplates","$schname.prm")
         nprm  = projectdir("exp","prm",schname,expname,"member$(@sprintf("%02d",imember)).prm")
         open(tprm,"w") do fprm
             open(oprm,"r") do rprm

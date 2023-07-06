@@ -21,7 +21,7 @@ for powerii in plist1
     mkpath(projectdir("exp","prm","SPC",expname,conii))
     for imember = 1 : 15
         mstr = @sprintf("%02d",imember)
-        oprm = projectdir("scripts","modifysam","prm","SPC_$(expname).prm")
+        oprm = projectdir("scripts","modifysam","prmtemplates","SPC_$(expname).prm")
         nprm = projectdir("exp","prm","SPC",expname,conii,"member$(mstr).prm")
         open(tprm,"w") do fprm
             open(oprm,"r") do rprm
