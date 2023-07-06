@@ -10,7 +10,7 @@ tprm  = projectdir("exp","tmp.prm")
 plist1 = [0,0.2,0.5,1,2,5,10,20,50,100,200,500]
 plist2 = [0,0.02,0.05,0.1,0.2,0.5,1,2,5,10,20,50,100,200,500]
 
-for powerii in plist2
+for powerii in plist1
     conii = dampingstrprnt(powerii)
     mkpath(projectdir("exp","prm","DGW",expname,conii))
     for imember = 1 : 15

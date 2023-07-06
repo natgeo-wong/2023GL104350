@@ -5,7 +5,7 @@ using Printf
 
 include(srcdir("sam.jl"))
 
-expname = "S1284km300V64"
+expname = "P1282km300V64"
 tprm  = projectdir("exp","tmp.prm")
 plist1 = [
     0,sqrt(2),2,2*sqrt(2.5),5,5*sqrt(2),
@@ -16,7 +16,7 @@ plist2 = vcat(
     plist1
 )
 
-for powerii in plist2
+for powerii in plist1
     conii = relaxscalestrprnt(powerii)
     mkpath(projectdir("exp","prm","TGR",expname,conii))
     for imember = 1 : 15
