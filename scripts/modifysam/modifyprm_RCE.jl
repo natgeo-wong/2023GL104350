@@ -4,10 +4,11 @@ using Printf
 
 expname = "P1282km300V64"
 tprm  = projectdir("exp","tmp.prm")
+mkpath(projectdir("exp","prm","RCE",expname))
 
 for imember = 1 : 10
     mstr = @sprintf("%02d",imember)
-    oprm  = projectdir("exp","prmtemplates","RCE","DGW_$(expname).prm")
+    oprm  = projectdir("scripts","modifysam","prmtemplates","RCE_$(expname).prm")
     nprm  = projectdir("exp","prm","RCE",expname,"member$(mstr).prm")
     open(tprm,"w") do fprm
         open(oprm,"r") do rprm
