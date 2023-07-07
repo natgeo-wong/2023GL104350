@@ -97,11 +97,11 @@ dowtg_decomptgr               = .false.
 
 wtgscale_time        = 0.1
 
-am_wtg               = 1.000000e+01 ! momentum damping rate in day^-1, default= 1.,
-am_wtg_exp           = 0.,          ! exponent of p/p0 in momentum damping rate.
-lambda_wtg           = 650.e3,      ! quarter wavelength in m. default = 650.e3 m
+am_wtg               = 1.000000e01 ! momentum damping rate in day^-1, default= 1.,
+am_wtg_exp           = 0.,         ! exponent of p/p0 in momentum damping rate.
+lambda_wtg           = 650.e3,     ! quarter wavelength in m. default = 650.e3 m
 
-tau_wtg              = 1.000000e+01 ! temperature relaxation in hours, default= 1.,
+tau_wtg              = 1.000000e01 ! temperature relaxation in hours, default= 1.,
 dthetadz_min         = 1.e-3
 dowtgLBL             = .false.
 

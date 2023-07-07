@@ -36,6 +36,7 @@ for powerii in plist1
                     s = replace(s,"[bool]" => "false")
                     s = replace(s,"[tau]" => @sprintf("%7e",1))
                 end
+                s = replace(s,"e+" => "e")
                 write(fprm,s)
             end
         end
