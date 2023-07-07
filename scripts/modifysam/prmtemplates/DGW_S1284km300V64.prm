@@ -12,7 +12,7 @@ nrestart      = 0,
 nrestart_skip = 239,
 perturb_type  = 0,
 
-CEM   = .true.,
+LES_S = .false.,
 OCEAN = .true.,
 
 dosgs            = .true.,
