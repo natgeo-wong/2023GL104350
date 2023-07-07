@@ -27,21 +27,20 @@ open(mrun,"r") do frun
             nrun = projectdir("run","TGR",expname,pwrname,"ensemble$(mstr).sh")
 
             open(nrun,"w") do wrun
-                sn = replace(s ,"[email]"=>"")
-                sn = replace(sn,"[directory]"=>"")
-                sn = replace(sn,"[user]"=>"")
-                sn = replace(sn,"[experiment]"=>"$(expname)")
-                sn = replace(sn,"[config]"=>"$(pwrname)")
+                sn = replace(s ,"[email]"       => )
+                sn = replace(sn,"[directory]"   => projectdir())
+                sn = replace(sn,"[experiment]"  => expname)
+                sn = replace(sn,"[config]"      => pwrname)
                 if ensembleii < 6
-                    sn = replace(sn,"[sndname]"=>"$(expname)")
+                    sn = replace(sn,"[sndname]" => "$(expname)")
                 elseif (ensembleii > 5) && (ensembleii < 11)
-                    sn = replace(sn,"[sndname]"=>"$(expname)_hot")
+                    sn = replace(sn,"[sndname]" => "$(expname)_hot")
                 else
-                    sn = replace(sn,"[sndname]"=>"$(expname)_cld")
+                    sn = replace(sn,"[sndname]" => "$(expname)_cld")
                 end
-                sn = replace(sn,"[lsfname]"=>"noforcing")
-                sn = replace(sn,"[schname]"=>"TGR")
-                sn = replace(sn,"member[xx]"=>"member$(mstr)")
+                sn = replace(sn,"[lsfname]"     => "noforcing")
+                sn = replace(sn,"[schname]"     => "TGR")
+                sn = replace(sn,"member[xx]"    => "member$(mstr)")
                 write(wrun,sn)
             end
 
@@ -58,10 +57,10 @@ open(brun,"r") do frun
         nrun = projectdir("run","TGR",expname,pwrname,"Build.csh")
 
         open(nrun,"w") do wrun
-            sn = replace(s ,"[user]"=>"")
-            sn = replace(sn,"[schname]"=>"TGR")
-            sn = replace(sn,"[expname]"=>"$(expname)")
-            sn = replace(sn,"[runname]"=>"$(pwrname)")
+            sn = replace(s ,"[datadir]" => datadir())
+            sn = replace(sn,"[schname]" => "TGR")
+            sn = replace(sn,"[expname]" => expname)
+            sn = replace(sn,"[runname]" => pwrname)
             write(wrun,sn)
         end
 

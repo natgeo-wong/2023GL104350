@@ -27,7 +27,7 @@ sndname=[sndname]
 lsfname=[lsfname]
 ensemblemember=member[xx]
 
-exproot=/n/holylfs04/LABS/kuang_lab/Users/[user]/2023GL104350/exp
+exproot=[directory]/exp
 prmfile=$exproot/prm/[schname]/$experiment/$config/${ensemblemember}.prm
 sndfile=$exproot/snd/$sndname
 lsffile=$exproot/lsf/$lsfname

@@ -4,7 +4,7 @@
 # restart and large output data file will be located :
 
 #setenv SAM_SCR `pwd`
-setenv SAM_SCR [directory]/[user]/2023GL104350/data/[schname]/[expname]/[runname]
+setenv SAM_SCR [datadir]/[schname]/[expname]/[runname]
 
 # ----------------------------------
 # specify scalar-advection directory in SRC
