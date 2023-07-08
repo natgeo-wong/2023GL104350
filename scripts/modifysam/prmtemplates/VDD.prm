@@ -4,7 +4,7 @@ caseid ='ExploreWTGSpace-[expname]-member[xx]',
 
 dx = 4000.,
 dy = 4000.,
-dt = 30.,
+dt = 10.,
 
 doensemble    = .true.,
 nensemble     = [en],
@@ -61,10 +61,10 @@ doisccp = .false.,
 domodis = .false.,
 domisr  = .false.,
 
-nstop    = 720000,
-nprint   = 2880,
+nstop    = 2160000,
+nprint   = 8640,
 nstat    = 360,     ! Calculate statistics every hour!
-nstatfrq = 36,     ! Collect 60 samples per statistical calculation (every 1 minute)
+nstatfrq = 60,     ! Collect 60 samples per statistical calculation (every 1 minute)
 
 doSAMconditionals     = .false.,
 dosatupdnconditionals = .false.,
