@@ -1,5 +1,5 @@
 using DrWatson
-@quickactivate "ExploreWTGSpace"
+@quickactivate "2023GL104350"
 using Printf
 
 include(srcdir("samsnd.jl"))
