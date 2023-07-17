@@ -83,7 +83,7 @@ cd ./OUT_3D
 
 for fcom3D in *$ensemblemember*.com3D
 do
-    if com3D2nc "$fbin3D" >& /dev/null
+    if com3D2nc "$fcom3D" >& /dev/null
     then
         echo "Processing SAM com3D output file $fcom3D ... done"
         rm "$fcom3D"
@@ -94,12 +94,12 @@ done
 
 for fcom2D in *$ensemblemember*.com2D
 do
-    if com2D2nc "$fbin2D" >& /dev/null
+    if com2D2nc "$fcom2D" >& /dev/null
     then
         echo "Processing SAM com2D output file $fcom2D ... done"
         rm "$fcom2D"
     else
-        echo "Processing SAM bin2D output file $fcom2D ... failed"
+        echo "Processing SAM com2D output file $fcom2D ... failed"
     fi
 done
 
