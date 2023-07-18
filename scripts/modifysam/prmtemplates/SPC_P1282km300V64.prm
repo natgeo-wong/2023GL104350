@@ -101,7 +101,7 @@ lambda_wtg           = 650.e3,      ! quarter wavelength in m. default = 650.e3 
 
 tau_wtg              = [tau] ! temperature relaxation in hours, default= 1.,
 dthetadz_min         = 1.e-3
-dowtgLBL             = .false.
+dowtgLBL             = .true.
 
 wtgscale_vertmodenum = 2      ! number of vertical modes
 wtgscale_vertmodescl = 1., 1. ! wtg strength scaling for vertical modes
