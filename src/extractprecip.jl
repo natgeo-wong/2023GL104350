@@ -35,7 +35,7 @@ function extractprecip(
                 nit = ods.dim["time"]
                 prcp[1:nit,ids] .= ods["PREC"][:]
             catch
-                @info "Unable to extract precipitation data from $(ods)"
+                @warn "Unable to extract precipitation data from $(ods)"
             end
             close(ods)
         end
