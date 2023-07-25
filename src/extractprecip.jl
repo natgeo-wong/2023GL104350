@@ -38,6 +38,8 @@ function extractprecip(
                 @warn "Unable to extract precipitation data from $(fnc)"
             end
             close(ods)
+        else
+            @warn "No file exists at $(fnc), please run this configuration again ..."
         end
 
     end
