@@ -89,11 +89,11 @@ function extractprecip(
 
         ensemble = @sprintf("%02d",ids)
         @info "$(Dates.now()) - Opening $(datadir(
-            "archive","$schname","$expname","OUT_STAT",
+            "$schname","$expname","OUT_STAT",
             "$(schname)_ExploreWTGSpace-$(expname)-member$(ensemble).nc"
         ))"
         ods = NCDataset(datadir(
-            "archive","$schname","$expname","OUT_STAT",
+            "$schname","$expname","OUT_STAT",
             "$(schname)_ExploreWTGSpace-$(expname)-member$(ensemble).nc"
         ))
         nit = ods.dim["time"]
