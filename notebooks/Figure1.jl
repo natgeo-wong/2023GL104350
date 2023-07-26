@@ -222,8 +222,8 @@ begin
 	end
 
 	fig.colorbar(c1,label=L"Outgoing Longwave Radiation / W m$^{-2}$")
-	fig.savefig(plotsdir("fig1-wtgschematic.png"),transparent=false,dpi=600)
-	load(plotsdir("fig1-wtgschematic.png"))
+	fig.savefig(projectdir("figures","fig1-wtgschematic.png"),transparent=false,dpi=600)
+	load(projectdir("figures","fig1-wtgschematic.png"))
 end
 
 # ╔═╡ Cell order:

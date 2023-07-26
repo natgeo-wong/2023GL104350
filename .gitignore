@@ -6,6 +6,7 @@
 *data*
 videos
 notebooks/*.png
+plots/
 _research
 /Manifest.toml
 logs/

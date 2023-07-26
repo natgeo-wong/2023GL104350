@@ -1,263 +1,120 @@
 ### A Pluto.jl notebook ###
-# v0.19.25
+# v0.19.26
 
 using Markdown
 using InteractiveUtils
 
-# ╔═╡ 681658b0-5914-11eb-0d65-bbace277d145
+# ╔═╡ 0ed8f41a-74fe-11ed-1f19-85b3e328530b
 begin
 	using Pkg; Pkg.activate()
 	using DrWatson
-	
-md"Using DrWatson in order to ensure reproducibility between different machines ..."
+	md"Using DrWatson in order to ensure reproducibility between different machines ..."
 end
 
-# ╔═╡ 6dce35fc-5914-11eb-0ce2-0d4e164e1898
+# ╔═╡ 000a8d8d-24c7-40f6-a47a-8a299bb508f5
 begin
 	@quickactivate "2023GL104350"
-	using DSP
+	using DelimitedFiles
 	using NCDatasets
-	using PlutoUI
-	using Printf
 	using StatsBase
-	
-	using ImageShow, PNGFiles
+	using Printf
 	using PyCall, LaTeXStrings
+	using PNGFiles, ImageShow
+
 	pplt = pyimport("proplot")
-	
-	include(srcdir("sam.jl"))
-	
-md"Loading modules for the 2023GL104350 project..."
+
+	md"Loading modules for the 2023GL104350 project..."
 end
 
-# ╔═╡ e78a75c2-590f-11eb-1144-9127b0309135
+# ╔═╡ 0dcabe70-3b22-4b76-a42e-80ab872da27d
 md"
-# Figure 3. Time Series, Power Spectrum
+# Figure 3. Idealized Static Energies
 "
 
-# ╔═╡ a63de98c-5b35-11eb-0a8f-b7a1ebd441b6
+# ╔═╡ 9b813dbb-80dc-4e52-9588-5b8ea360e483
+zt = 0 : 0.01 : 1
+
+# ╔═╡ 230c7c11-7f41-4bfa-9094-5d187b5cf741
+zz = 0 : 0.01 : 1.1
+
+# ╔═╡ d1cf9344-ef1f-4915-a674-f9e02b0cb7e0
+id_mse = 0.5 .+(zz.^2 .-zz)./2 .- 0.375
+
+# ╔═╡ 81106d9d-7141-4aeb-8539-2e704e031ed6
 begin
-	configDGW = [0.01,0.02,0.05,0.1,0.2,0.5,1,2,5,10,20,50,100,200,500,1000]
-	configWTG = [
-		0.01,0.02,0.02*sqrt(2.5),0.05,0.05*sqrt(2),
-		0.1,0.2,0.2*sqrt(2.5),0.5,0.5*sqrt(2),
-		1,sqrt(2),2,2*sqrt(2.5),5,5*sqrt(2),
-		10,10*sqrt(2),20,20*sqrt(2.5),50,50*sqrt(2),100
-	]
-	nconDGW = length(configDGW)
-	nconWTG = length(configWTG)
-    blues_DGW = pplt.get_colors("Blues",(nconDGW+2))
-	blues_WTG = pplt.get_colors("Blues",(nconWTG+2))
-	lgd_DGW = Dict("frame"=>false,"ncols"=>2)
-	lgd_WTG = Dict("frame"=>false,"ncols"=>3)
-	md"Loading time dimension and defining the damping experiments ..."
+	id_dse = deepcopy(id_mse)
+	id_dse[zz.<0.5] .= 0 .- id_dse[zz.<0.5]
 end
 
-# ╔═╡ 864f1d31-c629-412b-825a-98fe9398b591
+# ╔═╡ 97299df2-efb6-44c8-8603-c9d2b4de6f0a
+id_gmse = (zz.-0.5)./10
+
+# ╔═╡ a4e8272c-4a4d-4f4e-8ef9-2ce607a499fd
 begin
-	pplt.close()
-	fts,ats = pplt.subplots(nrows=2,aspect=2,axwidth=3.5)
+	id_gdse = collect(deepcopy(id_gmse))
+	id_gdse[zz.<0.5] .= -1 * id_gdse[zz.<0.5]
+end
 
-	for ic in 1 : nconDGW
+# ╔═╡ 00f4548d-c8cd-455e-92f0-9d3c92499211
+begin
+	w1_wet = 0.1*sin.(zz*pi);   w1_wet[zz.>1] .= 0
+	w2_wet = 0.1*sin.(zz*2*pi); w2_wet[zz.>1] .= 0
+	w1_dry = 0.1*sin.(zz*pi);   w1_dry[zz.>1] .= 0
+	w2_dry = 0.1*sin.(zz*2*pi); w2_dry[zz.>1] .= 0
+end
 
-		fnc = "DGW-S1284km300V64-damping$(dampingstrprnt(configDGW[ic])).nc"
-		ds_dgwprcp = NCDataset(datadir("precipitation",fnc))
+# ╔═╡ 6e71c910-87ba-49cf-bfc2-33d2c5323051
+lgd = Dict("ncols"=>1,"frame"=>false)
 
-		tdgw    = ds_dgwprcp["time"][:]; tdgw = reshape(tdgw,8,:)
-		tdgw    = dropdims(mean(tdgw,dims=1),dims=1)
-		prcpdgw = ds_dgwprcp["precipitation"][:] / 24
-		
-		
-		for ien = 1 : 15
-
-			prcpii = prcpdgw[:,ien]
-			prcpii = reshape(prcpii,8,:)
-			prcpii = dropdims(mean(prcpii,dims=1),dims=1)
-
-			if ien == 1
-				constr = @sprintf("%.1e",configDGW[ic])
-				ats[1].plot(
-					tdgw,prcpii,color=blues_DGW[ic+1],
-					label=(L"$a_m =$" * " $(constr)" * L" day$^{-1}$"),
-					legend="r",legend_kw=lgd_DGW
-				)
-			else
-				ats[1].plot(tdgw,prcpii,color=blues_DGW[ic+1])
-			end
-			
-		end
-
-		close(ds_dgwprcp)
-
-	end
-
-	for ic in 1 : nconWTG
-
-		fnc = "WTG-S1284km300V64-$(relaxscalestrprnt(configWTG[ic])).nc"
-		ds_wtgprcp = NCDataset(datadir("precipitation",fnc))
-
-		twtg    = ds_wtgprcp["time"][:]; twtg = reshape(twtg,8,:)
-		twtg    = dropdims(mean(twtg,dims=1),dims=1)
-		prcpwtg = ds_wtgprcp["precipitation"][:] / 24
-		
-		
-		for ien = 1 : 15
-
-			prcpii = prcpwtg[:,ien]
-			prcpii = reshape(prcpii,8,:)
-			prcpii = dropdims(mean(prcpii,dims=1),dims=1)
-
-			if ien == 1
-				constr = @sprintf("%.1e",configWTG[ic])
-				ats[2].plot(
-					twtg,prcpii,color=blues_WTG[ic+1],
-					label=(L"$\tau =$" * " $(constr) hr"),
-					legend="r",legend_kw=lgd_WTG
-				)
-			else
-				ats[2].plot(twtg,prcpii,color=blues_WTG[ic+1])
-			end
-			
-		end
-
-		close(ds_wtgprcp)
-
-	end
-
-	ds_rceprcp = NCDataset(datadir("precipitation","RCE-S1284km300V64.nc"))
-
-	t_RCE = ds_rceprcp["time"][:]
-	prcp_RCE = ds_rceprcp["precipitation"][:] / 24
-	ats[1].plot(t_RCE,prcp_RCE[:,1],c="k",label="RCE",legend="r")
-	ats[2].plot(t_RCE,prcp_RCE[:,1],c="k",label="RCE",legend="r")
-	ats[1].plot(t_RCE,prcp_RCE[:,2:10],c="k")
-	ats[2].plot(t_RCE,prcp_RCE[:,2:10],c="k")
-
-	ats[1].format(ultitle="(a) Precipitation Time-Series (DGW)")
-	ats[2].format(ultitle="(b) Precipitation Time-Series (TGR)")
-
-	close(ds_rceprcp)
+# ╔═╡ 0dc0c36f-9bc3-4181-a552-dd9e097eb00d
+begin
+	pplt.close
+	fig,axs = pplt.subplots(
+		ncols=5,aspect=0.5,axwidth=1,
+		sharey=0,sharex=0,wspace=[3,1,3,1]
+	)
 	
-	for ax in ats
+	axs[1].plot(c="blue6", alpha=0.5,w1_wet,zz,label=L"$w_H$ (Moist)",legend="b")
+	axs[1].plot(c="green6",alpha=0.5,w2_wet,zz,label=L"$w_F$ (Congestus)",legend="b",legend_kw=lgd)
+	axs[1].format(xlocator=[0],ultitle="(a)")
+
+	axs[2].plot(id_mse,zz,c="k",label="h",legend="b",legend_kw=lgd)
+	axs[2].plot(id_dse,zz,c="gray",linestyle="--",label="s",legend="b")
+	axs[2].format(xlocator=[],ultitle="(b1)")
+
+	axs[3].plot(id_gmse,zz,c="k",label=L"\partial_zh",legend="b",legend_kw=lgd)
+	axs[3].plot(id_gdse,zz,c="gray",linestyle="--",label=L"\partial_zs",legend="b")
+	axs[3].format(xlocator=[0],ultitle="(b2)")
+
+	axs[5].plot(id_gmse.*w2_wet.*25,zz,c="green6",label=L"w_F \cdot \partial_zh",legend="b",legend_kw=lgd)
+	axs[5].plot(id_gdse.*w2_wet.*25,zz,c="green2",linestyle="--",label=L"w_F \cdot \partial_zs",legend="b")
+	axs[5].format(xlocator=[0],ultitle="(c2)")
+
+	axs[4].plot(id_gmse.*w1_wet.*25,zz,c="blue6",label=L"w_H \cdot \partial_zh",legend="b",legend_kw=lgd)
+	axs[4].plot(id_gdse.*w1_wet.*25,zz,c="blue2",linestyle="--",label=L"w_H \cdot \partial_zs",legend="b")
+	axs[4].format(xlocator=[0],ultitle="(c1)")
+
+	for ax in axs
 		ax.format(
-			xlim=(000,250),#yscale="symlog",yscale_kw=Dict("linthresh"=>0.01),
-			ylim=(0,0.5),
-			ylabel=L"Rainfall Rate / mm hr$^{-1}$",xlabel="Days"
+			xlim=(-0.2,0.2),ylim=(0,1.2),xloc="bottom",grid=false,yloc="zero",
+			ylocator=0:1,yminorlocator=[],yticklabels=["",L"z_t"]
 		)
 	end
 	
-	fts.savefig(plotsdir("fig3-timeseries.png"),transparent=false,dpi=400)
-	load(plotsdir("fig3-timeseries.png"))
-end
-
-# ╔═╡ 2a3c3054-90ad-4f2b-a4d2-bdfa45983377
-begin
-	signalpower_DGW = zeros(401,nconDGW,15)
-	signalfreq_DGW  = zeros(401,nconDGW,15)
-	totalmember_DGW = zeros(1,nconDGW)
-	for icon = 1 : nconDGW
-
-		fnc = "DGW-S1284km300V64-damping$(dampingstrprnt(configDGW[icon])).nc"
-		ds_dgwprcp = NCDataset(datadir("precipitation",fnc))
-		prcpdgw = ds_dgwprcp["precipitation"][:]
-		close(ds_dgwprcp)
-		
-		nmem = 0
-		for imem = 1 : 15
-			prcp = prcpdgw[:,imem]
-			if sum(.!isnan.(prcp)) == 2000
-				nmem += 1
-				prcp = prcp[(end-799):end] .- mean(prcp[(end-799):end])
-				pdg = periodogram(prcp,fs=8)
-				signalpower_DGW[:,icon,imem] .= pdg.power
-				signalfreq_DGW[:,icon,imem]  .= pdg.freq
-			end
-		end
-		totalmember_DGW[icon] = nmem
-	end
-	signalpower_DGW = dropdims(sum(signalpower_DGW,dims=3),dims=3)
-	signalpower_DGW = signalpower_DGW ./ totalmember_DGW
-	signalfreq_DGW  = dropdims(sum(signalfreq_DGW ,dims=3),dims=3)
-	signalfreq_DGW  = signalfreq_DGW  ./ totalmember_DGW
-	signalfreq_DGW  = dropdims(mean(signalfreq_DGW[:,2:end],dims=2),dims=2)
-end
-
-# ╔═╡ 6fc11aaf-0b10-468b-8943-4675715dc11f
-begin
-	signalpower_TGR = zeros(401,nconWTG,15)
-	signalfreq_TGR  = zeros(401,nconWTG,15)
-	totalmember_TGR = zeros(1,nconWTG)
-	for icon = 1 : nconWTG
-
-		fnc = "WTG-S1284km300V64-$(relaxscalestrprnt(configWTG[icon])).nc"
-		ds_wtgprcp = NCDataset(datadir("precipitation",fnc))
-		prcpwtg = ds_wtgprcp["precipitation"][:]
-		close(ds_wtgprcp)
-		
-		nmem = 0
-		for imem = 1 : 15
-			prcp = prcpwtg[:,imem]
-			if sum(.!isnan.(prcp)) == 2000
-				nmem += 1
-				prcp = prcp[(end-799):end] .- mean(prcp[(end-799):end])
-				pdg = periodogram(prcp,fs=8)
-				signalpower_TGR[:,icon,imem] .= pdg.power
-				signalfreq_TGR[:,icon,imem]  .= pdg.freq
-			end
-		end
-		totalmember_TGR[icon] = nmem
-	end
-	signalpower_TGR = dropdims(sum(signalpower_TGR,dims=3),dims=3)
-	signalpower_TGR = signalpower_TGR ./ totalmember_TGR
-	signalfreq_TGR  = dropdims(sum(signalfreq_TGR ,dims=3),dims=3)
-	signalfreq_TGR  = signalfreq_TGR  ./ totalmember_TGR
-	signalfreq_TGR  = dropdims(mean(signalfreq_TGR,dims=2),dims=2)
-end
-
-# ╔═╡ 6a21129c-9a25-4e32-8fc8-34106ee9279e
-begin
-	pplt.close(); fps,aps = pplt.subplots(ncols=2,aspect=2,axwidth=3,sharey=0)
-
-	lvls = 10:10:100
-
-	c = aps[1].contourf(
-		1 ./signalfreq_DGW[2:end],configDGW,
-		(signalpower_DGW)'[:,2:end],
-		levels=lvls,extend="both",cmap="fire"
-	)
-	aps[1].format(
-		ylabel=L"$a_m$ / day$^{-1}$",ylim=(0.01,100),
-		ultitle="(c) Power Spectral Density (DGW)"
-	)
-
-	c = aps[2].contourf(
-		1 ./signalfreq_TGR[2:end],configWTG,
-		(signalpower_TGR)'[:,2:end],
-		levels=lvls,extend="both",cmap="fire"
-	)
-	aps[2].format(
-		ylabel=L"$\tau$ / hr",ylim=(0.01,100),
-		ultitle="(d) Power Spectral Density (TGR)",ytickloc="right"
-	)
-
-	for ax in aps
-		ax.format(
-			xscale="log",xlim=(0.2,50),xlabel="Period / Days",
-			yscale="log",yformatter="log"
-		)
-	end
-
-	fps.colorbar(c,length=0.75,label="Power / dB")
-	fps.savefig(plotsdir("fig3-powerspectrum.png"),transparent=false,dpi=400)
-	load(plotsdir("fig3-powerspectrum.png"))
+	fig.savefig(projectdir("figures","fig3-idealisedstaticenergies.png"),transparent=false,dpi=400)
+	load(projectdir("figures","fig3-idealisedstaticenergies.png"))
 end
 
 # ╔═╡ Cell order:
-# ╟─e78a75c2-590f-11eb-1144-9127b0309135
-# ╟─681658b0-5914-11eb-0d65-bbace277d145
-# ╟─6dce35fc-5914-11eb-0ce2-0d4e164e1898
-# ╟─a63de98c-5b35-11eb-0a8f-b7a1ebd441b6
-# ╟─864f1d31-c629-412b-825a-98fe9398b591
-# ╟─2a3c3054-90ad-4f2b-a4d2-bdfa45983377
-# ╟─6fc11aaf-0b10-468b-8943-4675715dc11f
-# ╟─6a21129c-9a25-4e32-8fc8-34106ee9279e
+# ╟─0dcabe70-3b22-4b76-a42e-80ab872da27d
+# ╟─0ed8f41a-74fe-11ed-1f19-85b3e328530b
+# ╟─000a8d8d-24c7-40f6-a47a-8a299bb508f5
+# ╠═9b813dbb-80dc-4e52-9588-5b8ea360e483
+# ╠═230c7c11-7f41-4bfa-9094-5d187b5cf741
+# ╠═d1cf9344-ef1f-4915-a674-f9e02b0cb7e0
+# ╠═81106d9d-7141-4aeb-8539-2e704e031ed6
+# ╠═97299df2-efb6-44c8-8603-c9d2b4de6f0a
+# ╠═a4e8272c-4a4d-4f4e-8ef9-2ce607a499fd
+# ╠═00f4548d-c8cd-455e-92f0-9d3c92499211
+# ╠═6e71c910-87ba-49cf-bfc2-33d2c5323051
+# ╠═0dc0c36f-9bc3-4181-a552-dd9e097eb00d

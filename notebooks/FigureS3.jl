@@ -318,8 +318,8 @@ begin
 		axs[ii].format(ytickloc="r")
 	end
 	
-	fig.savefig(projectdir("figures","fig2-bifurcation.png"),transparent=false,dpi=400)
-	load(projectdir("figures","fig2-bifurcation.png"))
+	fig.savefig(projectdir("figures","figS3-wwtg.png"),transparent=false,dpi=400)
+	load(projectdir("figures","figS3-wwtg.png"))
 end
 
 # ╔═╡ Cell order:

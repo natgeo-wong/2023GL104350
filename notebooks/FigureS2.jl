@@ -57,7 +57,7 @@ begin
 
 	for ic in 1 : nconDGW
 
-		fnc = "DGW-P1282km300V64-$(dampingstrprnt(configDGW[ic])).nc"
+		fnc = "DGW-T1282km300V64-$(dampingstrprnt(configDGW[ic])).nc"
 		ds_dgwprcp = NCDataset(datadir("precipitation",fnc))
 
 		tdgw    = ds_dgwprcp["time"][:]; tdgw = reshape(tdgw,24,:)
@@ -90,7 +90,7 @@ begin
 
 	for ic in 1 : nconWTG
 
-		fnc = "TGR-P1282km300V64-$(relaxscalestrprnt(configWTG[ic])).nc"
+		fnc = "TGR-T1282km300V64-$(relaxscalestrprnt(configWTG[ic])).nc"
 		ds_wtgprcp = NCDataset(datadir("precipitation",fnc))
 
 		twtg    = ds_wtgprcp["time"][:]; twtg = reshape(twtg,24,:)
@@ -120,7 +120,7 @@ begin
 		close(ds_wtgprcp)
 
 
-		fnc = "SPC-P1282km300V64-$(relaxscalestrprnt(configWTG[ic])).nc"
+		fnc = "SPC-T1282km300V64-$(relaxscalestrprnt(configWTG[ic])).nc"
                 ds_wtgprcp = NCDataset(datadir("precipitation",fnc))
 
                 twtg    = ds_wtgprcp["time"][:]; twtg = reshape(twtg,24,:)
@@ -151,7 +151,7 @@ begin
 
 	end
 
-	ds_rceprcp = NCDataset(datadir("precipitation","RCE-P1282km300V64.nc"))
+	ds_rceprcp = NCDataset(datadir("precipitation","RCE-T1282km300V64.nc"))
 
 	t_RCE = ds_rceprcp["time"][:]
 	prcp_RCE = ds_rceprcp["precipitation"][:] / 24
@@ -173,8 +173,8 @@ begin
 		)
 	end
 	
-	fts.savefig(projectdir("figures","figS1-timeseries-P1282km300V64.png"),transparent=false,dpi=400)
-	load(projectdir("figures","figS1-timeseries-P1282km300V64.png"))
+	fts.savefig(projectdir("figures","figS2-timeseries-T1282km300V64.png"),transparent=false,dpi=400)
+	load(projectdir("figures","figS2-timeseries-T1282km300V64.png"))
 end
 
 # ╔═╡ Cell order:

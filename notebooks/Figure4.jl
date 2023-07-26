@@ -199,8 +199,8 @@ begin
 	)
 	axs[2].format(ylim=(0,1.25),ylabel=L"Rain Rate / mm hr$^{-1}$")
 	
-	fig.savefig(plotsdir("fig4-baroclinicmodes.png"),transparent=false,dpi=400)
-	load(plotsdir("fig4-baroclinicmodes.png"))
+	fig.savefig(projectdir("figures","fig4-baroclinicmodes.png"),transparent=false,dpi=400)
+	load(projectdir("figures","fig4-baroclinicmodes.png"))
 end
 
 # ╔═╡ Cell order:
