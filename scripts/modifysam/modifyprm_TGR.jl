@@ -7,10 +7,12 @@ include(srcdir("sam.jl"))
 
 expname = "P1282km300V64"
 tprm  = projectdir("exp","tmp.prm")
-plist1 = [sqrt(2),2,2*sqrt(2.5),5,5*sqrt(2)]
-plist2 = vcat(plist1/10,1,plist1,10,plist1*10)
+pvec  = [sqrt(2),2,2*sqrt(2.5),5,5*sqrt(2)]
+pvec1 = vcat(pwrvec,10,pwrvec*10)
+pvec2 = vcat(pwrvec/10,1,pwrvec,10,pwrvec*10)
+pvec  = pvec1
 
-for powerii in plist1
+for powerii in pvec
     conii = relaxscalestrprnt(powerii)
     mkpath(projectdir("exp","prm","TGR",expname,conii))
     for imember = 1 : 15
