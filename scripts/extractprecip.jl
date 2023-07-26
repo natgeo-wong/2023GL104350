@@ -16,5 +16,5 @@ TGR2 = vcat(TGR/10,1,TGR,10,TGR*10)
 pwrvec  = DGW1
 
 for pwr in pwrvec
-    extractwwtg(schname,expname,dampingstrprnt(pwr),nt=6000,tperday=24)
+    extractprecip(schname,expname,dampingstrprnt(pwr),nt=6000,tperday=24)
 end
