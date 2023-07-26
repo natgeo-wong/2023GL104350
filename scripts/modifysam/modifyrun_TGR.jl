@@ -5,11 +5,8 @@ using Printf
 include(srcdir("sam.jl"))
 
 expname = "P1282km300V64"
-pwrvec1 = [
-    0,sqrt(2),2,2*sqrt(2.5),5,5*sqrt(2),
-    10,10*sqrt(2),20,20*sqrt(2.5),50,50*sqrt(2),
-]
-pwrvec2 = vcat(plist1/100,1,plist1)
+pwrvec1 = [sqrt(2),2,2*sqrt(2.5),5,5*sqrt(2)]
+pwrvec2 = vcat(pwrvec1/10,1,pwrvec1,10,pwrvec1*10)
 pwrvec  = pwrvec1
 
 mrun = projectdir("run","modifysam","runtemplates","modelrun.sh")
