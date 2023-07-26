@@ -35,17 +35,17 @@ md"
 
 # ╔═╡ 3c16bd2b-55e0-492f-baf3-aef6a998e9d6
 begin
-	configDGW = [0.2,0.5,1,2,5,10,20,50,100,200,500]
+	configDGW1 = [0.2,0.5,1,2,5,10,20,50,100,200,500]
+	configDGW2 = [0.02,0.05,0.1,0.2,0.5,1,2,5,10,20,50,100,200,500]
 	configWTG1 = [
 		sqrt(2),2,2*sqrt(2.5),5,5*sqrt(2),10,
 		10*sqrt(2),20,20*sqrt(2.5),50,50*sqrt(2)
 	]
 	configWTG2 = [
-		0.5*sqrt(2),1,
+		0.1*sqrt(2),0.2,0.2*sqrt(2.5),0.5,0.5*sqrt(2),1,
 		sqrt(2),2,2*sqrt(2.5),5,5*sqrt(2),10,
 		10*sqrt(2),20,20*sqrt(2.5),50,50*sqrt(2)
 	]
-	nconDGW = length(configDGW)
 md"Loading time dimension and defining the damping experiments ..."
 end
 
@@ -65,7 +65,7 @@ begin
 	prcpRCEμ_T = mean(prcp_RCE[1001:2000,:])
 	close(ds_rceprcp)
 
-	for conDGW in configDGW
+	for conDGW in configDGW1
 
 		fnc = "DGW-P1282km300V64-$(dampingstrprnt(conDGW)).nc"
 		ds_dgwprcp = NCDataset(datadir("precipitation",fnc))
@@ -74,18 +74,17 @@ begin
 		for ien = 1 : 15
 
 			prcpii  = prcp[end-2399:end,ien]
-			prcpii  = dropdims(mean(reshape(prcpii,24,:),dims=1),dims=1)
 			prcpii  = prcpii[.!isnan.(prcpii)]
 			prcpμ   = mean(prcpii)
 			prcpσ   = zeros(2,1)
 
 			if !isnan(prcpμ)
-				prcpσ[1] = prcpμ - minimum(prcpii)
-				prcpσ[2] = maximum(prcpii) - prcpμ
-				if prcpμ < prcpRCEμ_P * 0.9
+				prcpσ[1] = prcpμ - quantile(prcpii,0.05)
+				prcpσ[2] = quantile(prcpii,0.95) - prcpμ
+				if prcpμ < prcpRCEμ_P * 0.95
 					mclr = "yellow9"
 					lclr = "yellow3"
-				elseif prcpμ > prcpRCEμ_P * 1.1
+				elseif prcpμ > prcpRCEμ_P / 0.95
 					mclr = "blue9"
 					lclr = "blue3"
 				else
@@ -100,6 +99,10 @@ begin
 
 		close(ds_dgwprcp)
 
+	end
+
+	for conDGW in configDGW2
+
 		fnc = "DGW-T1282km300V64-$(dampingstrprnt(conDGW)).nc"
 		ds_dgwprcp = NCDataset(datadir("precipitation",fnc))
 
@@ -107,18 +110,17 @@ begin
 		for ien = 1 : 15
 
 			prcpii  = prcp[end-2399:end,ien]
-			prcpii  = dropdims(mean(reshape(prcpii,24,:),dims=1),dims=1)
 			prcpii  = prcpii[.!isnan.(prcpii)]
 			prcpμ   = mean(prcpii)
 			prcpσ   = zeros(2,1)
 
 			if !isnan(prcpμ)
-				prcpσ[1] = prcpμ - minimum(prcpii)
-				prcpσ[2] = maximum(prcpii) - prcpμ
-				if prcpμ < prcpRCEμ_T * 0.9
+				prcpσ[1] = prcpμ - quantile(prcpii,0.05)
+				prcpσ[2] = quantile(prcpii,0.95) - prcpμ
+				if prcpμ < prcpRCEμ_T * 0.95
 					mclr = "yellow9"
 					lclr = "yellow3"
-				elseif prcpμ > prcpRCEμ_T * 1.1
+				elseif prcpμ > prcpRCEμ_T / 0.95
 					mclr = "blue9"
 					lclr = "blue3"
 				else
@@ -144,18 +146,17 @@ begin
 		for ien = 1 : 15
 
 			prcpii  = prcp[end-2399:end,ien]
-			prcpii  = dropdims(mean(reshape(prcpii,24,:),dims=1),dims=1)
 			prcpii  = prcpii[.!isnan.(prcpii)]
 			prcpμ   = mean(prcpii)
 			prcpσ   = zeros(2,1)
 
 			if !isnan(prcpμ)
-				prcpσ[1] = prcpμ - minimum(prcpii)
-				prcpσ[2] = maximum(prcpii) - prcpμ
-				if prcpμ < prcpRCEμ_T * 0.9
+				prcpσ[1] = prcpμ - quantile(prcpii,0.05)
+				prcpσ[2] = quantile(prcpii,0.95) - prcpμ
+				if prcpμ < prcpRCEμ_T * 0.95
 					mclr = "yellow9"
 					lclr = "yellow3"
-				elseif prcpμ > prcpRCEμ_T * 1.1
+				elseif prcpμ > prcpRCEμ_T / 0.95
 					mclr = "blue9"
 					lclr = "blue3"
 				else
@@ -177,18 +178,17 @@ begin
 		for ien = 1 : 15
 
 			prcpii  = prcp[end-2399:end,ien]
-			prcpii  = dropdims(mean(reshape(prcpii,24,:),dims=1),dims=1)
 			prcpii  = prcpii[.!isnan.(prcpii)]
 			prcpμ   = mean(prcpii)
 			prcpσ   = zeros(2,1)
 
 			if !isnan(prcpμ)
-				prcpσ[1] = prcpμ - minimum(prcpii)
-				prcpσ[2] = maximum(prcpii) - prcpμ
-				if prcpμ < prcpRCEμ_T * 0.9
+				prcpσ[1] = prcpμ - quantile(prcpii,0.05)
+				prcpσ[2] = quantile(prcpii,0.95) - prcpμ
+				if prcpμ < prcpRCEμ_T * 0.95
 					mclr = "yellow9"
 					lclr = "yellow3"
-				elseif prcpμ > prcpRCEμ_T * 1.1
+				elseif prcpμ > prcpRCEμ_T / 0.95
 					mclr = "blue9"
 					lclr = "blue3"
 				else
@@ -214,18 +214,17 @@ begin
 		for ien = 1 : 15
 
 			prcpii  = prcp[end-2399:end,ien]
-			prcpii  = dropdims(mean(reshape(prcpii,24,:),dims=1),dims=1)
 			prcpii  = prcpii[.!isnan.(prcpii)]
 			prcpμ   = mean(prcpii)
 			prcpσ   = zeros(2,1)
 
 			if !isnan(prcpμ)
-				prcpσ[1] = prcpμ - minimum(prcpii)
-				prcpσ[2] = maximum(prcpii) - prcpμ
-				if prcpμ < prcpRCEμ_P * 0.9
+				prcpσ[1] = prcpμ - quantile(prcpii,0.05)
+				prcpσ[2] = quantile(prcpii,0.95) - prcpμ
+				if prcpμ < prcpRCEμ_P * 0.95
 					mclr = "yellow9"
 					lclr = "yellow3"
-				elseif prcpμ > prcpRCEμ_P * 1.1
+				elseif prcpμ > prcpRCEμ_P / 0.95
 					mclr = "blue9"
 					lclr = "blue3"
 				else
@@ -247,18 +246,17 @@ begin
 		for ien = 1 : 15
 
 			prcpii  = prcp[end-2399:end,ien]
-			prcpii  = dropdims(mean(reshape(prcpii,24,:),dims=1),dims=1)
 			prcpii  = prcpii[.!isnan.(prcpii)]
 			prcpμ   = mean(prcpii)
 			prcpσ   = zeros(2,1)
 
 			if !isnan(prcpμ)
-				prcpσ[1] = prcpμ - minimum(prcpii)
-				prcpσ[2] = maximum(prcpii) - prcpμ
-				if prcpμ < prcpRCEμ_P * 0.9
+				prcpσ[1] = prcpμ - quantile(prcpii,0.05)
+				prcpσ[2] = quantile(prcpii,0.95) - prcpμ
+				if prcpμ < prcpRCEμ_P * 0.95
 					mclr = "yellow9"
 					lclr = "yellow3"
-				elseif prcpμ > prcpRCEμ_P * 1.1
+				elseif prcpμ > prcpRCEμ_P / 0.95
 					mclr = "blue9"
 					lclr = "blue3"
 				else
@@ -282,7 +280,7 @@ begin
 	axs[4].plot([1,1]*prcpRCEμ_T,[0,2000],c="grey")
 	axs[6].plot([1,1]*prcpRCEμ_T,[0,2000],c="grey")
 
-	axs[1].format(ltitle="(a) DGW",ylabel=L"$a_m$ / day$^{-1}$")
+	axs[1].format(ltitle="(a) DGW",ylabel=L"$\alpha$")
 	axs[3].format(ltitle="(b) TGR",)
 	axs[5].format(ltitle="(c) SPC")
 	axs[6].format(ylabel=L"$\tau$ / hr")
@@ -303,10 +301,10 @@ begin
 	end
 	
 	for ii in 1 : 2
-		axs[ii].format(ylim=(0.05,2000),yscale="log")
+		axs[ii].format(ylim=(0.005,2000),yscale="log")
 	end
 	for ii in 3 : 6
-		axs[ii].format(ylim=(0.3,200),yscale="log")
+		axs[ii].format(ylim=(0.05,200),yscale="log")
 	end
 		
 	for ii in 2 : 5
