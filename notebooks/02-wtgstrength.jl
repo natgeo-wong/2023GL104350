@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.16
+# v0.19.26
 
 using Markdown
 using InteractiveUtils
@@ -24,7 +24,7 @@ end
 
 # ╔═╡ 6dce35fc-5914-11eb-0ce2-0d4e164e1898
 begin
-	@quickactivate "ExploreWTGSpace"
+	@quickactivate "2023GL104350"
 	using PlutoUI
 	using Printf
 	using StatsBase
@@ -64,70 +64,34 @@ The pseudo-wavenumber $k'$ is smaller than the actual wavenumber $k$, which impl
 
 # ╔═╡ 3be6a428-9555-4a92-9611-eaf8c0f9d3df
 @bind schname Select([
-	"WTG" => "(WTG) Weak Temperature Gradient [Raymond and Zeng, 2005]",
-	"CON" => "(CON) Constant WTG [Daleu et al. 2015]",
-	"SIN" => "(SIN) Full Sine-Curve",
-	"DCM" => "(DCM) Decomposed WTG Sine-Curve",
+	"TGR" => "(TGR) Temperature Gradient Relaxation [Raymond and Zeng, 2005]",
+	"SPC" => "(SPC) Spectral WTG [Herman and Raymond, 2014]",
 ])
 
 # ╔═╡ e5de2fc0-6f10-4ff9-817f-95fa20821b06
 @bind prefix Select([
 	"P" => "Perpetual Insolation (P)",
-	"D" => "Diurnal Insolation (D)",
-	"T" => "Non-interactive Radiation (T)",
-	"S" => "Bulk-surface Fluxes (S)",
+	"T" => "Temperature Tendency (T)",
+	"S" => "Fixed-Wind Surface Fluxes (S)",
 ])
 
-# ╔═╡ a99febc5-75f1-416a-8d17-2f6ba4ef9fb0
-md"Toggle Domain Size $(@bind islarge PlutoUI.Slider(64:64:128,default=128,show_value=true)) km"
-
 # ╔═╡ ae58e5de-2eb9-4e96-b6ed-2f25c0e682b2
-md"Toggle Horizontal Resolution: $(@bind hres PlutoUI.Slider(-1:1,default=0))"
-
-# ╔═╡ ab78df44-4f57-447a-80d3-0531f912a9ed
-md"Sea Surface Temperature: $(@bind sst PlutoUI.Slider(295:5:305,default=300, show_value=true))"
-
-# ╔═╡ b8a3a33f-34ca-46c9-867a-f88106ef83cf
-md"Coarse Vertical Grid? $(@bind iscvg PlutoUI.Slider(0:1))"
+md"Toggle Horizontal Resolution: $(@bind hres PlutoUI.Slider(0:1,default=0))"
 
 # ╔═╡ d3b025e0-5b35-11eb-330a-5fbb2204da63
 begin
-	domsize = @sprintf("%03d",islarge)
-
-	if schname == "WTG"
+	expname = "$(prefix)128$(Int(2. ^hres*2))km300V64"
 	
-		if islarge == 64
-			  res = Int(2. ^(hres-1)*2)
-		else; res = Int(2. ^hres*2)
-		end
-		
-		if iszero(iscvg)
-			  vgrd = 64
-		else; vgrd = 28
-		end
-		expname = "$(prefix)$(domsize)$(res)km$(sst)V$(vgrd)"
-
-	else
-
-		if prefix == "T"
-			expname = "T1282km300V64"
-		elseif prefix == "S"
-			expname = "S1284km300V64"
-		else
-			expname = "P1282km300V64"
-		end
-
-	end
-	
-md"**WTG Scheme:** $schname | **Experiment Set:** $expname"
+md"**Experiment Set:** $expname"
 end
 
 # ╔═╡ a63de98c-5b35-11eb-0a8f-b7a1ebd441b6
 begin
-	configDGW = [1,2,5,10,20,50,100,200,500,1000]
+	configDGW = [0.2,0.5,1,2,5,10,20,50,100,200,500]
 	configWTG = [
-		1,sqrt(2),2,2*sqrt(2.5),5,5*sqrt(2),10,
-		10*sqrt(2),20,20*sqrt(2.5),50,50*sqrt(2),100
+		0.1*sqrt(2),0.2,0.2*sqrt(2.5),0.5,0.5*sqrt(2),
+		1,sqrt(2),2,2*sqrt(2.5),5,5*sqrt(2),
+		10,10*sqrt(2),20,20*sqrt(2.5),50,50*sqrt(2)
 	]
 	nconDGW = length(configDGW)
 	nconWTG = length(configWTG)
@@ -151,8 +115,8 @@ begin
 	)
 
 	pwr = 0
-	for imem = 1 : 10
-		fnc = outstatname("RCE",expname,"",false,true,imem)
+	for imem = 1 : 15
+		fnc = outstatname("DGW",expname,"damping000d00",false,true,imem)
 		if isfile(fnc)
 			_,p,t = retrievedims_fnc(fnc); t = t .- 80
 			pr = retrievevar_fnc("PREC",fnc)./24
@@ -181,13 +145,13 @@ begin
 	pwr = pwr / 10 * 24
 	
 	for ic in 1 : nconDGW
-		config = "damping$(dampingstrprnt(configDGW[ic]))"
+		config = dampingstrprnt(configDGW[ic])
 		imem = 0
 		
 		while imem < 15; imem += 1
 			fnc = outstatname("DGW",expname,config,false,true,imem)
 			if isfile(fnc)
-				_,p,t = retrievedims_fnc(fnc); t = t .- 80
+				_,p,t = retrievedims_fnc(fnc)
 				pr = retrievevar_fnc("PREC",fnc)./24
 				pa = retrievevar_fnc("AREAPREC",fnc)
 				pw = retrievevar_fnc("PW",fnc)
@@ -199,12 +163,12 @@ begin
 				sw = calcswp(rh,qv,p)
 				cr = pw ./ sw / 10
 
-				pr = mean(pr[(end-99):end])
-				pa = mean(pa[(end-99):end])
-				ra = mean(ra[(end-99):end])
-				pw = mean(pw[(end-99):end])
-				cr = mean(cr[(end-99):end])
-				ol = mean(ol[(end-99):end])
+				pr = mean(pr[(end-2399):end])
+				pa = mean(pa[(end-2399):end])
+				ra = mean(ra[(end-2399):end])
+				pw = mean(pw[(end-2399):end])
+				cr = mean(cr[(end-2399):end])
+				ol = mean(ol[(end-2399):end])
 
 				if (imem >= 6) && (imem <= 10)
 					clr = "yellow7"
@@ -237,7 +201,7 @@ begin
 		while imem < 15; imem += 1
 			fnc = outstatname(schname,expname,config,false,true,imem)
 			if isfile(fnc)
-				_,p,t = retrievedims_fnc(fnc); t = t .- 80
+				_,p,t = retrievedims_fnc(fnc)
 				pr = retrievevar_fnc("PREC",fnc)./24
 				pa = retrievevar_fnc("AREAPREC",fnc)
 				pw = retrievevar_fnc("PW",fnc)
@@ -302,7 +266,7 @@ begin
 	ats[5].format(xlim=(0,100),ultitle="(e)")
 
 	for ii in 1 : 5
-		ats[ii].format(ylim=(0.5,2000),yscale="log")
+		ats[ii].format(ylim=(0.1,1000),yscale="log")
 	end
 	for ii in 2 : 5
 		ats[ii].format(yticklabels=["","","",""],ytickminor=10:10:100)
@@ -329,7 +293,7 @@ begin
 	ats[10].format(xlim=(0,100),xlabel="CRH / %",ultitle="(e)")
 
 	for ii in 6 : 10
-		ats[ii].format(ylim=(0.5,200),yscale="log")
+		ats[ii].format(ylim=(0.1,100),yscale="log")
 	end
 	for ii in 7 : 10
 		ats[ii].format(yticklabels=["","","",""],ytickminor=10:10:100)
@@ -382,7 +346,7 @@ begin
 		swh = zeros(64)
 	
 		for ic in 1 : nconDGW
-			icon = "damping$(dampingstrprnt(configDGW[ic]))"
+			icon = dampingstrprnt(configDGW[ic])
 			imem = 0
 			
 			while imem < 15; imem += 1
@@ -535,13 +499,10 @@ end
 # ╟─b6892634-9199-11eb-38d5-8dda8da16ed7
 # ╟─3be6a428-9555-4a92-9611-eaf8c0f9d3df
 # ╟─e5de2fc0-6f10-4ff9-817f-95fa20821b06
-# ╟─a99febc5-75f1-416a-8d17-2f6ba4ef9fb0
 # ╟─ae58e5de-2eb9-4e96-b6ed-2f25c0e682b2
-# ╟─ab78df44-4f57-447a-80d3-0531f912a9ed
-# ╟─b8a3a33f-34ca-46c9-867a-f88106ef83cf
 # ╟─d3b025e0-5b35-11eb-330a-5fbb2204da63
 # ╟─a63de98c-5b35-11eb-0a8f-b7a1ebd441b6
-# ╟─55230f4a-7661-11eb-1c37-8b022b95e08e
+# ╠═55230f4a-7661-11eb-1c37-8b022b95e08e
 # ╟─9cf4fa56-91a8-11eb-2710-955eefd10142
 # ╟─364a1ce8-91ba-11eb-29a8-b948110e6125
 # ╟─7f71bb3d-fae1-4d44-a612-0d5bfb1dd4e4
