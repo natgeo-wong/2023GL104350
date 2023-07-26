@@ -41,7 +41,7 @@ begin
 		10*sqrt(2),20,20*sqrt(2.5),50,50*sqrt(2)
 	]
 	configWTG2 = [
-		1,
+		0.5*sqrt(2),1,
 		sqrt(2),2,2*sqrt(2.5),5,5*sqrt(2),10,
 		10*sqrt(2),20,20*sqrt(2.5),50,50*sqrt(2)
 	]
@@ -53,9 +53,7 @@ end
 # ╠═╡ show_logs = false
 begin
 	pplt.close()
-	fig,axs = pplt.subplots(
-		ncols=6,aspect=0.3,axwidth=0.8,sharey=0,wspace=[1,6,1,6,1]
-	)
+	fig,axs = pplt.subplots(ncols=6,aspect=0.3,axwidth=0.8,sharey=0,wspace=[1,3,1,1,1])
 
 	ds_rceprcp = NCDataset(datadir("precipitation","RCE-P1282km300V64.nc"))
 	prcp_RCE = ds_rceprcp["precipitation"][:] / 24
@@ -76,7 +74,7 @@ begin
 		for ien = 1 : 15
 
 			prcpii  = prcp[end-2399:end,ien]
-			prcpii  = dropdims(mean(reshape(prcpii,6,:),dims=1),dims=1)
+			prcpii  = dropdims(mean(reshape(prcpii,24,:),dims=1),dims=1)
 			prcpii  = prcpii[.!isnan.(prcpii)]
 			prcpμ   = mean(prcpii)
 			prcpσ   = zeros(2,1)
@@ -85,16 +83,16 @@ begin
 				prcpσ[1] = prcpμ - minimum(prcpii)
 				prcpσ[2] = maximum(prcpii) - prcpμ
 				if prcpμ < prcpRCEμ_P * 0.9
-					mclr = "yellow7"
+					mclr = "yellow9"
 					lclr = "yellow3"
 				elseif prcpμ > prcpRCEμ_P * 1.1
-					mclr = "blue7"
+					mclr = "blue9"
 					lclr = "blue3"
 				else
-					mclr = "green7"
+					mclr = "green9"
 					lclr = "green3"
 				end
-				axs[1].scatter(prcpμ,conDGW,c=mclr,s=10,zorder=5)
+				axs[1].scatter(prcpμ,conDGW,c=mclr,s=20,zorder=5)
 				axs[1].errorbar(prcpμ,conDGW,0,prcpσ,c=lclr,zorder=4)
 			end
 			
@@ -109,7 +107,7 @@ begin
 		for ien = 1 : 15
 
 			prcpii  = prcp[end-2399:end,ien]
-			prcpii  = dropdims(mean(reshape(prcpii,6,:),dims=1),dims=1)
+			prcpii  = dropdims(mean(reshape(prcpii,24,:),dims=1),dims=1)
 			prcpii  = prcpii[.!isnan.(prcpii)]
 			prcpμ   = mean(prcpii)
 			prcpσ   = zeros(2,1)
@@ -118,16 +116,16 @@ begin
 				prcpσ[1] = prcpμ - minimum(prcpii)
 				prcpσ[2] = maximum(prcpii) - prcpμ
 				if prcpμ < prcpRCEμ_T * 0.9
-					mclr = "yellow7"
+					mclr = "yellow9"
 					lclr = "yellow3"
 				elseif prcpμ > prcpRCEμ_T * 1.1
-					mclr = "blue7"
+					mclr = "blue9"
 					lclr = "blue3"
 				else
-					mclr = "green7"
+					mclr = "green9"
 					lclr = "green3"
 				end
-				axs[2].scatter(prcpμ,conDGW,c=mclr,s=10,zorder=5)
+				axs[2].scatter(prcpμ,conDGW,c=mclr,s=20,zorder=5)
 				axs[2].errorbar(prcpμ,conDGW,0,prcpσ,c=lclr,zorder=4)
 			end
 			
@@ -146,7 +144,7 @@ begin
 		for ien = 1 : 15
 
 			prcpii  = prcp[end-2399:end,ien]
-			prcpii  = dropdims(mean(reshape(prcpii,6,:),dims=1),dims=1)
+			prcpii  = dropdims(mean(reshape(prcpii,24,:),dims=1),dims=1)
 			prcpii  = prcpii[.!isnan.(prcpii)]
 			prcpμ   = mean(prcpii)
 			prcpσ   = zeros(2,1)
@@ -155,16 +153,16 @@ begin
 				prcpσ[1] = prcpμ - minimum(prcpii)
 				prcpσ[2] = maximum(prcpii) - prcpμ
 				if prcpμ < prcpRCEμ_T * 0.9
-					mclr = "yellow7"
+					mclr = "yellow9"
 					lclr = "yellow3"
 				elseif prcpμ > prcpRCEμ_T * 1.1
-					mclr = "blue7"
+					mclr = "blue9"
 					lclr = "blue3"
 				else
-					mclr = "green7"
+					mclr = "green9"
 					lclr = "green3"
 				end
-				axs[4].scatter(prcpμ,conWTG,c=mclr,s=10,zorder=5)
+				axs[4].scatter(prcpμ,conWTG,c=mclr,s=20,zorder=5)
 				axs[4].errorbar(prcpμ,conWTG,0,prcpσ,c=lclr,zorder=4)
 			end
 			
@@ -179,7 +177,7 @@ begin
 		for ien = 1 : 15
 
 			prcpii  = prcp[end-2399:end,ien]
-			prcpii  = dropdims(mean(reshape(prcpii,6,:),dims=1),dims=1)
+			prcpii  = dropdims(mean(reshape(prcpii,24,:),dims=1),dims=1)
 			prcpii  = prcpii[.!isnan.(prcpii)]
 			prcpμ   = mean(prcpii)
 			prcpσ   = zeros(2,1)
@@ -188,16 +186,16 @@ begin
 				prcpσ[1] = prcpμ - minimum(prcpii)
 				prcpσ[2] = maximum(prcpii) - prcpμ
 				if prcpμ < prcpRCEμ_T * 0.9
-					mclr = "yellow7"
+					mclr = "yellow9"
 					lclr = "yellow3"
 				elseif prcpμ > prcpRCEμ_T * 1.1
-					mclr = "blue7"
+					mclr = "blue9"
 					lclr = "blue3"
 				else
-					mclr = "green7"
+					mclr = "green9"
 					lclr = "green3"
 				end
-				axs[6].scatter(prcpμ,conWTG,c=mclr,s=10,zorder=5)
+				axs[6].scatter(prcpμ,conWTG,c=mclr,s=20,zorder=5)
 				axs[6].errorbar(prcpμ,conWTG,0,prcpσ,c=lclr,zorder=4)
 			end
 			
@@ -216,7 +214,7 @@ begin
 		for ien = 1 : 15
 
 			prcpii  = prcp[end-2399:end,ien]
-			prcpii  = dropdims(mean(reshape(prcpii,6,:),dims=1),dims=1)
+			prcpii  = dropdims(mean(reshape(prcpii,24,:),dims=1),dims=1)
 			prcpii  = prcpii[.!isnan.(prcpii)]
 			prcpμ   = mean(prcpii)
 			prcpσ   = zeros(2,1)
@@ -225,16 +223,16 @@ begin
 				prcpσ[1] = prcpμ - minimum(prcpii)
 				prcpσ[2] = maximum(prcpii) - prcpμ
 				if prcpμ < prcpRCEμ_P * 0.9
-					mclr = "yellow7"
+					mclr = "yellow9"
 					lclr = "yellow3"
 				elseif prcpμ > prcpRCEμ_P * 1.1
-					mclr = "blue7"
+					mclr = "blue9"
 					lclr = "blue3"
 				else
-					mclr = "green7"
+					mclr = "green9"
 					lclr = "green3"
 				end
-				axs[3].scatter(prcpμ,conWTG,c=mclr,s=10,zorder=5)
+				axs[3].scatter(prcpμ,conWTG,c=mclr,s=20,zorder=5)
 				axs[3].errorbar(prcpμ,conWTG,0,prcpσ,c=lclr,zorder=4)
 			end
 			
@@ -249,7 +247,7 @@ begin
 		for ien = 1 : 15
 
 			prcpii  = prcp[end-2399:end,ien]
-			prcpii  = dropdims(mean(reshape(prcpii,6,:),dims=1),dims=1)
+			prcpii  = dropdims(mean(reshape(prcpii,24,:),dims=1),dims=1)
 			prcpii  = prcpii[.!isnan.(prcpii)]
 			prcpμ   = mean(prcpii)
 			prcpσ   = zeros(2,1)
@@ -258,16 +256,16 @@ begin
 				prcpσ[1] = prcpμ - minimum(prcpii)
 				prcpσ[2] = maximum(prcpii) - prcpμ
 				if prcpμ < prcpRCEμ_P * 0.9
-					mclr = "yellow7"
+					mclr = "yellow9"
 					lclr = "yellow3"
 				elseif prcpμ > prcpRCEμ_P * 1.1
-					mclr = "blue7"
+					mclr = "blue9"
 					lclr = "blue3"
 				else
-					mclr = "green7"
+					mclr = "green9"
 					lclr = "green3"
 				end
-				axs[5].scatter(prcpμ,conWTG,c=mclr,s=10,zorder=5)
+				axs[5].scatter(prcpμ,conWTG,c=mclr,s=20,zorder=5)
 				axs[5].errorbar(prcpμ,conWTG,0,prcpσ,c=lclr,zorder=4)
 			end
 			
@@ -285,33 +283,42 @@ begin
 	axs[6].plot([1,1]*prcpRCEμ_T,[0,2000],c="grey")
 
 	axs[1].format(ltitle="(a) DGW",ylabel=L"$a_m$ / day$^{-1}$")
-	axs[3].format(ltitle="(b) TGR",ylabel=L"$\tau$ / hr")
-	axs[5].format(ltitle="(c) SPC",ylabel=L"$\tau_1$ / hr")
+	axs[3].format(ltitle="(b) TGR",)
+	axs[5].format(ltitle="(c) SPC")
+	axs[6].format(ylabel=L"$\tau$ / hr")
+
+	for ax in axs
+		ax.format(
+			xscale="symlog",xscale_kw=Dict("linthresh"=>0.01),
+			xlim=(0,2),xlabel=L"Precipitation Rate / mm hr$^{-1}$",
+			lrtitle="Wet",lltitle="Dry"
+		)
+	end
 
 	for ii in 1 : 2 : 5
-		axs[ii].format(
-			xscale="symlog",xscale_kw=Dict("linthresh"=>0.01),ultitle="(i) RRTM",
-			xlim=(0,10),xlabel=L"Precipitation Rate / mm hr$^{-1}$"
-		)
+		axs[ii].format(ultitle="(i) RRTM")
+	end
+	for ii in 2 : 2 : 6
+		axs[ii].format(ultitle="(ii) Ideal")
 	end
 	
 	for ii in 1 : 2
 		axs[ii].format(ylim=(0.05,2000),yscale="log")
 	end
-	
 	for ii in 3 : 6
-		axs[ii].format(ylim=(0.5,200),yscale="log")
+		axs[ii].format(ylim=(0.3,200),yscale="log")
 	end
-	for ii in 2 : 2 : 6
+		
+	for ii in 2 : 5
 		axs[ii].format(
 			xscale="symlog",xscale_kw=Dict("linthresh"=>0.01),
-			yticklabels=["","","",""],ytickminor=10:10:100,ultitle="(ii) Ideal",
-			xlabel=L"Precipitation Rate / mm hr$^{-1}$",xlim=(0,10)
+			yticklabels=["","","",""],ytickminor=10:10:100,
+			xlabel=L"Precipitation Rate / mm hr$^{-1}$",xlim=(0,2)
 		)
 	end
-	
-	for ax in axs
-		ax.format(lrtitle="Wet",lltitle="Dry")
+
+	for ii in 3 : 6
+		axs[ii].format(ytickloc="r")
 	end
 	
 	fig.savefig(plotsdir("fig2-bifurcation.png"),transparent=false,dpi=400)
