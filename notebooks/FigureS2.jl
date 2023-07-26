@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.25
+# v0.19.26
 
 using Markdown
 using InteractiveUtils
@@ -31,13 +31,14 @@ end
 
 # ╔═╡ e78a75c2-590f-11eb-1144-9127b0309135
 md"
-# Figure S1. Time Series, Full Radiation
+# Figure S2. Time Series, Idealised Radiation
 "
 
 # ╔═╡ a63de98c-5b35-11eb-0a8f-b7a1ebd441b6
 begin
-	configDGW = [0.2,0.5,1,2,5,10,20,50,100,200,500]
+	configDGW = [0.02,0.05,0.1,0.2,0.5,1,2,5,10,20,50,100,200,500]
 	configWTG = [
+		0.1*sqrt(2),0.2,0.2*sqrt(2.5),0.5,0.5*sqrt(2),1,
 		sqrt(2),2,2*sqrt(2.5),5,5*sqrt(2),10,
 		10*sqrt(2),20,20*sqrt(2.5),50,50*sqrt(2)
 	]
@@ -45,7 +46,7 @@ begin
 	nconWTG = length(configWTG)
 	blues_DGW = pplt.get_colors("Blues",(nconDGW+2))
 	blues_WTG = pplt.get_colors("Blues",(nconWTG+2))
-	lgd_DGW = Dict("frame"=>false,"ncols"=>2)
+	lgd_DGW = Dict("frame"=>false,"ncols"=>3)
 	lgd_WTG = Dict("frame"=>false,"ncols"=>3)
 	md"Loading time dimension and defining the damping experiments ..."
 end
@@ -53,7 +54,7 @@ end
 # ╔═╡ 864f1d31-c629-412b-825a-98fe9398b591
 begin
 	pplt.close()
-	fts,ats = pplt.subplots(nrows=2,aspect=2,axwidth=3.5)
+	fts,ats = pplt.subplots(nrows=3,aspect=3,axwidth=4)
 
 	for ic in 1 : nconDGW
 
@@ -68,14 +69,14 @@ begin
 		for ien = 1 : 15
 
 			prcpii = prcpdgw[:,ien]
-			prcpii = reshape(prcpii,8,:)
+			prcpii = reshape(prcpii,24,:)
 			prcpii = dropdims(mean(prcpii,dims=1),dims=1)
 
 			if ien == 1
 				constr = @sprintf("%.1e",configDGW[ic])
 				ats[1].plot(
 					tdgw,prcpii,color=blues_DGW[ic+1],
-					label=(L"$a_m =$" * " $(constr)" * L" day$^{-1}$"),
+					label=(L"$\alpha =$" * " $(constr)"),
 					legend="r",legend_kw=lgd_DGW
 				)
 			else
@@ -121,33 +122,33 @@ begin
 
 
 		fnc = "SPC-T1282km300V64-$(relaxscalestrprnt(configWTG[ic])).nc"
-                ds_wtgprcp = NCDataset(datadir("precipitation",fnc))
+		ds_wtgprcp = NCDataset(datadir("precipitation",fnc))
 
-                twtg    = ds_wtgprcp["time"][:]; twtg = reshape(twtg,24,:)
-                twtg    = dropdims(mean(twtg,dims=1),dims=1)
-                prcpwtg = ds_wtgprcp["precipitation"][:] / 24
+		twtg    = ds_wtgprcp["time"][:]; twtg = reshape(twtg,24,:)
+		twtg    = dropdims(mean(twtg,dims=1),dims=1)
+		prcpwtg = ds_wtgprcp["precipitation"][:] / 24
 
 
-                for ien = 1 : 15
+		for ien = 1 : 15
 
-                        prcpii = prcpwtg[:,ien]
-                        prcpii = reshape(prcpii,24,:)
-                        prcpii = dropdims(mean(prcpii,dims=1),dims=1)
+			prcpii = prcpwtg[:,ien]
+			prcpii = reshape(prcpii,24,:)
+			prcpii = dropdims(mean(prcpii,dims=1),dims=1)
 
-                        if ien == 1
-                                constr = @sprintf("%.1e",configWTG[ic])
-                                ats[3].plot(
-                                        twtg,prcpii,color=blues_WTG[ic+1],
-                                        label=(L"$\tau =$" * " $(constr) hr"),
-                                        legend="r",legend_kw=lgd_WTG
-                                )
-                        else
-                                ats[3].plot(twtg,prcpii,color=blues_WTG[ic+1])
-                        end
+			if ien == 1
+				constr = @sprintf("%.1e",configWTG[ic])
+				ats[3].plot(
+					twtg,prcpii,color=blues_WTG[ic+1],
+					label=(L"$\tau =$" * " $(constr) hr"),
+					legend="r",legend_kw=lgd_WTG
+				)
+			else
+				ats[3].plot(twtg,prcpii,color=blues_WTG[ic+1])
+			end
 
-                end
+		end
 
-                close(ds_wtgprcp)
+		close(ds_wtgprcp)
 
 	end
 
@@ -157,19 +158,22 @@ begin
 	prcp_RCE = ds_rceprcp["precipitation"][:] / 24
 	ats[1].plot(t_RCE,prcp_RCE[:,1],c="k",label="RCE",legend="r")
 	ats[2].plot(t_RCE,prcp_RCE[:,1],c="k",label="RCE",legend="r")
+	ats[3].plot(t_RCE,prcp_RCE[:,1],c="k",label="RCE",legend="r")
 	ats[1].plot(t_RCE,prcp_RCE[:,2:10],c="k")
 	ats[2].plot(t_RCE,prcp_RCE[:,2:10],c="k")
+	ats[3].plot(t_RCE,prcp_RCE[:,2:10],c="k")
 
-	ats[1].format(ultitle="(a) Precipitation Time-Series (DGW)")
-	ats[2].format(ultitle="(b) Precipitation Time-Series (TGR)")
+	ats[1].format(ultitle="(a) Damped Gravity Wave")
+	ats[2].format(ultitle="(b) Temperature Gradient Relaxation")
+	ats[3].format(ultitle="(c) Spectral WTG")
 
 	close(ds_rceprcp)
 	
 	for ax in ats
 		ax.format(
 			xlim=(000,250),#yscale="symlog",yscale_kw=Dict("linthresh"=>0.01),
-			ylim=(0,0.5),
-			ylabel=L"Rainfall Rate / mm hr$^{-1}$",xlabel="Days"
+			ylim=(0,0.6),
+			ylabel=L"Daily-Averaged Rainfall Rate / mm hr$^{-1}$",xlabel="Days"
 		)
 	end
 	
