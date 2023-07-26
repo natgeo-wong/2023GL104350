@@ -287,7 +287,7 @@ begin
 
 	for ax in axs
 		ax.format(
-			xscale="symlog",xscale_kw=Dict("linthresh"=>0.1),
+			xscale="symlog",xscale_kw=Dict("linthresh"=>0.01),
 			xlim=(0,2),xlabel=L"Precipitation Rate / mm hr$^{-1}$",
 			lrtitle="Wet",lltitle="Dry"
 		)
@@ -316,6 +316,12 @@ begin
 
 	for ii in 3 : 6
 		axs[ii].format(ytickloc="r")
+	end
+		
+	for ii in 2 : 2 : 6
+		axs[ii].format(
+			xscale="linear",xlim=(0,0.75)
+		)
 	end
 	
 	fig.savefig(projectdir("figures","fig2-bifurcation.png"),transparent=false,dpi=400)

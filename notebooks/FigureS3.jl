@@ -69,7 +69,7 @@ end
 # ╠═╡ show_logs = false
 begin
 	pplt.close()
-	fig,axs = pplt.subplots(ncols=6,aspect=0.4,axwidth=1,wspace=[0,2,0,2,0])
+	fig,axs = pplt.subplots(ncols=6,aspect=0.4,axwidth=1,wspace=[1,2.5,1,2.5,1])
 
 	ds_rceprcp = NCDataset(datadir("precipitation","RCE-P1282km300V64.nc"))
 	prcp_RCE = ds_rceprcp["precipitation"][:] / 24
@@ -247,10 +247,15 @@ begin
 
 	for ax in axs
 		ax.format(
-			ylim=(1000,25),yscale="log",
+			ylim=(1000,20),yscale="log",
 			xscale="symlog",xscale_kw=Dict("linthresh"=>1),
-			xlim=(-20,20),xlabel=L"$w_{wtg}$ / m s$^{-1}$",
+			xlim=(-20,20),xlabel=L"$w_{wtg}$ / 10$^{-2}$ m s$^{-1}$",
 		)
+	end
+
+	for ii in 1 : 2 : 5
+		axs[ii].format(ultitle="(i) RRTM")
+		axs[ii+1].format(ultitle="(ii) Ideal")
 	end
 	
 	fig.savefig(projectdir("figures","figS3-wwtg.png"),transparent=false,dpi=400)
@@ -262,4 +267,4 @@ end
 # ╟─681658b0-5914-11eb-0d65-bbace277d145
 # ╟─6dce35fc-5914-11eb-0ce2-0d4e164e1898
 # ╟─3c16bd2b-55e0-492f-baf3-aef6a998e9d6
-# ╠═57bbb1c8-e0f8-4b49-8f55-86af376c5167
+# ╟─57bbb1c8-e0f8-4b49-8f55-86af376c5167
