@@ -21,10 +21,6 @@ function extractprecip(
     for ids = 1 : nmember
 
         ensemble = @sprintf("%02d",ids)
-        @info "$(Dates.now()) - Opening $(datadir(
-            "$schname","$expname","$runname","OUT_STAT",
-            "$(schname)_ExploreWTGSpace-$(expname)-member$(ensemble).nc"
-        ))"
         fnc = datadir(
             "$schname","$expname","$runname","OUT_STAT",
             "$(schname)_ExploreWTGSpace-$(expname)-member$(ensemble).nc"
@@ -32,8 +28,7 @@ function extractprecip(
         if isfile(fnc)
             ods = NCDataset(fnc)
             try
-                nit = ods.dim["time"]
-                prcp[1:nit,ids] .= ods["PREC"][:]
+                prcp[:,ids] .= ods["PREC"][:]
             catch
                 @warn "Unable to extract precipitation data from $(fnc)"
             end
