@@ -85,14 +85,17 @@ begin
 				prcpσ[1] = prcpμ - minimum(prcpii)
 				prcpσ[2] = maximum(prcpii) - prcpμ
 				if prcpμ < prcpRCEμ_P * 0.9
-					clr = "yellow7"
+					mclr = "yellow7"
+					lclr = "yellow3"
 				elseif prcpμ > prcpRCEμ_P * 1.1
-					clr = "blue5"
+					mclr = "blue7"
+					lclr = "blue3"
 				else
-					clr = "green6"
+					mclr = "green7"
+					lclr = "green3"
 				end
-				axs[1].scatter(prcpμ,conDGW,c=clr,s=50)
-				axs[1].errorbar(prcpμ,conDGW,0,prcpσ,c=clr)
+				axs[1].scatter(prcpμ,conDGW,c=mclr,s=10,zorder=5)
+				axs[1].errorbar(prcpμ,conDGW,0,prcpσ,c=lclr,zorder=4)
 			end
 			
 		end
@@ -115,14 +118,17 @@ begin
 				prcpσ[1] = prcpμ - minimum(prcpii)
 				prcpσ[2] = maximum(prcpii) - prcpμ
 				if prcpμ < prcpRCEμ_T * 0.9
-					clr = "yellow7"
+					mclr = "yellow7"
+					lclr = "yellow3"
 				elseif prcpμ > prcpRCEμ_T * 1.1
-					clr = "blue5"
+					mclr = "blue7"
+					lclr = "blue3"
 				else
-					clr = "green6"
+					mclr = "green7"
+					lclr = "green3"
 				end
-				axs[2].scatter(prcpμ,conDGW,c=clr,s=50)
-				axs[2].errorbar(prcpμ,conDGW,0,prcpσ,c=clr)
+				axs[2].scatter(prcpμ,conDGW,c=mclr,s=10,zorder=5)
+				axs[2].errorbar(prcpμ,conDGW,0,prcpσ,c=lclr,zorder=4)
 			end
 			
 		end
@@ -149,14 +155,17 @@ begin
 				prcpσ[1] = prcpμ - minimum(prcpii)
 				prcpσ[2] = maximum(prcpii) - prcpμ
 				if prcpμ < prcpRCEμ_T * 0.9
-					clr = "yellow7"
+					mclr = "yellow7"
+					lclr = "yellow3"
 				elseif prcpμ > prcpRCEμ_T * 1.1
-					clr = "blue5"
+					mclr = "blue7"
+					lclr = "blue3"
 				else
-					clr = "green6"
+					mclr = "green7"
+					lclr = "green3"
 				end
-				axs[4].scatter(prcpμ,conWTG,c=clr,s=50)
-				axs[4].errorbar(prcpμ,conWTG,0,prcpσ,c=clr)
+				axs[4].scatter(prcpμ,conWTG,c=mclr,s=10,zorder=5)
+				axs[4].errorbar(prcpμ,conWTG,0,prcpσ,c=lclr,zorder=4)
 			end
 			
 		end
@@ -179,14 +188,17 @@ begin
 				prcpσ[1] = prcpμ - minimum(prcpii)
 				prcpσ[2] = maximum(prcpii) - prcpμ
 				if prcpμ < prcpRCEμ_T * 0.9
-					clr = "yellow7"
+					mclr = "yellow7"
+					lclr = "yellow3"
 				elseif prcpμ > prcpRCEμ_T * 1.1
-					clr = "blue5"
+					mclr = "blue7"
+					lclr = "blue3"
 				else
-					clr = "green6"
+					mclr = "green7"
+					lclr = "green3"
 				end
-				axs[6].scatter(prcpμ,conWTG,c=clr,s=50)
-				axs[6].errorbar(prcpμ,conWTG,0,prcpσ,c=clr)
+				axs[6].scatter(prcpμ,conWTG,c=mclr,s=10,zorder=5)
+				axs[6].errorbar(prcpμ,conWTG,0,prcpσ,c=lclr,zorder=4)
 			end
 			
 		end
@@ -213,14 +225,17 @@ begin
 				prcpσ[1] = prcpμ - minimum(prcpii)
 				prcpσ[2] = maximum(prcpii) - prcpμ
 				if prcpμ < prcpRCEμ_P * 0.9
-					clr = "yellow7"
+					mclr = "yellow7"
+					lclr = "yellow3"
 				elseif prcpμ > prcpRCEμ_P * 1.1
-					clr = "blue5"
+					mclr = "blue7"
+					lclr = "blue3"
 				else
-					clr = "green6"
+					mclr = "green7"
+					lclr = "green3"
 				end
-				axs[3].scatter(prcpμ,conWTG,c=clr,s=50)
-				axs[3].errorbar(prcpμ,conWTG,0,prcpσ,c=clr)
+				axs[3].scatter(prcpμ,conWTG,c=mclr,s=10,zorder=5)
+				axs[3].errorbar(prcpμ,conWTG,0,prcpσ,c=lclr,zorder=4)
 			end
 			
 		end
@@ -243,14 +258,17 @@ begin
 				prcpσ[1] = prcpμ - minimum(prcpii)
 				prcpσ[2] = maximum(prcpii) - prcpμ
 				if prcpμ < prcpRCEμ_P * 0.9
-					clr = "yellow7"
+					mclr = "yellow7"
+					lclr = "yellow3"
 				elseif prcpμ > prcpRCEμ_P * 1.1
-					clr = "blue5"
+					mclr = "blue7"
+					lclr = "blue3"
 				else
-					clr = "green6"
+					mclr = "green7"
+					lclr = "green3"
 				end
-				axs[5].scatter(prcpμ,conWTG,c=clr,s=50)
-				axs[5].errorbar(prcpμ,conWTG,0,prcpσ,c=clr)
+				axs[5].scatter(prcpμ,conWTG,c=mclr,s=10,zorder=5)
+				axs[5].errorbar(prcpμ,conWTG,0,prcpσ,c=lclr,zorder=4)
 			end
 			
 		end
