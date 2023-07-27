@@ -69,7 +69,7 @@ end
 # ╠═╡ show_logs = false
 begin
 	pplt.close()
-	fig,axs = pplt.subplots(ncols=6,aspect=0.4,axwidth=1,wspace=[1,2.5,1,2.5,1])
+	fig,axs = pplt.subplots(ncols=6,aspect=0.3,axwidth=1.1,wspace=[1,2.5,1,2.5,1])
 
 	ds_rceprcp = NCDataset(datadir("precipitation","RCE-P1282km300V64.nc"))
 	prcp_RCE = ds_rceprcp["precipitation"][:] / 24
@@ -154,7 +154,7 @@ begin
 				axs[3].plot(wwtgii,p[:,ien],c=wet_WTG1[conii+1])
 			elseif prcpμ < prcpRCEμ_P * 0.95
 				axs[3].plot(wwtgii,p[:,ien],c=dry_WTG1[conii+1])
-			elseif !isnan(prcpμ)
+			else
 				axs[3].plot(wwtgii,p[:,ien],c=rce_WTG1[conii+1])
 			end
 			
@@ -178,7 +178,7 @@ begin
 				axs[5].plot(wwtgii,p[:,ien],c=wet_WTG1[conii+1])
 			elseif prcpμ < prcpRCEμ_P * 0.95
 				axs[5].plot(wwtgii,p[:,ien],c=dry_WTG1[conii+1])
-			elseif !isnan(prcpμ)
+			else
 				axs[5].plot(wwtgii,p[:,ien],c=rce_WTG1[conii+1])
 			end
 			
@@ -206,7 +206,7 @@ begin
 				axs[4].plot(wwtgii,p[:,ien],c=wet_WTG2[conii+1])
 			elseif prcpμ < prcpRCEμ_T * 0.95
 				axs[4].plot(wwtgii,p[:,ien],c=dry_WTG2[conii+1])
-			elseif !isnan(prcpμ)
+			else
 				axs[4].plot(wwtgii,p[:,ien],c=rce_WTG2[conii+1])
 			end
 			
@@ -230,7 +230,7 @@ begin
 				axs[6].plot(wwtgii,p[:,ien],c=wet_WTG2[conii+1])
 			elseif prcpμ < prcpRCEμ_T * 0.95
 				axs[6].plot(wwtgii,p[:,ien],c=dry_WTG2[conii+1])
-			elseif !isnan(prcpμ)
+			else
 				axs[6].plot(wwtgii,p[:,ien],c=rce_WTG2[conii+1])
 			end
 			
@@ -246,10 +246,11 @@ begin
 	axs[5].format(ltitle="(c) SPC")
 
 	for ax in axs
+		ax.plot([0,0],[1000,10],c="k")
 		ax.format(
 			ylim=(1000,20),yscale="log",
 			xscale="symlog",xscale_kw=Dict("linthresh"=>1),
-			xlim=(-20,20),xlabel=L"$w_{wtg}$ / 10$^{-2}$ m s$^{-1}$",
+			xlim=(-25,25),xlabel=L"$w_{wtg}$ / 10$^{-2}$ m s$^{-1}$",
 		)
 	end
 
