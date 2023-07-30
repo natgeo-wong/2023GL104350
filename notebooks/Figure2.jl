@@ -53,7 +53,7 @@ end
 # ╠═╡ show_logs = false
 begin
 	pplt.close()
-	fig,axs = pplt.subplots(ncols=6,aspect=0.3,axwidth=0.8,sharey=0,wspace=[1,3,1,1,1])
+	fig,axs = pplt.subplots(ncols=6,aspect=0.3,axwidth=0.8,sharey=0,wspace=[1,1,1,3,1])
 
 	ds_rceprcp = NCDataset(datadir("precipitation","RCE-P1282km300V64.nc"))
 	prcp_RCE = ds_rceprcp["precipitation"][:] / 24
@@ -91,8 +91,8 @@ begin
 					mclr = "green9"
 					lclr = "green3"
 				end
-				axs[1].scatter(prcpμ,conDGW,c=mclr,s=20,zorder=5)
-				axs[1].errorbar(prcpμ,conDGW,0,prcpσ,c=lclr,zorder=4)
+				axs[5].scatter(prcpμ,conDGW,c=mclr,s=20,zorder=5)
+				axs[5].errorbar(prcpμ,conDGW,0,prcpσ,c=lclr,zorder=4)
 			end
 			
 		end
@@ -127,8 +127,8 @@ begin
 					mclr = "green9"
 					lclr = "green3"
 				end
-				axs[2].scatter(prcpμ,conDGW,c=mclr,s=20,zorder=5)
-				axs[2].errorbar(prcpμ,conDGW,0,prcpσ,c=lclr,zorder=4)
+				axs[6].scatter(prcpμ,conDGW,c=mclr,s=20,zorder=5)
+				axs[6].errorbar(prcpμ,conDGW,0,prcpσ,c=lclr,zorder=4)
 			end
 			
 		end
@@ -163,8 +163,8 @@ begin
 					mclr = "green9"
 					lclr = "green3"
 				end
-				axs[4].scatter(prcpμ,conWTG,c=mclr,s=20,zorder=5)
-				axs[4].errorbar(prcpμ,conWTG,0,prcpσ,c=lclr,zorder=4)
+				axs[2].scatter(prcpμ,conWTG,c=mclr,s=20,zorder=5)
+				axs[2].errorbar(prcpμ,conWTG,0,prcpσ,c=lclr,zorder=4)
 			end
 			
 		end
@@ -195,8 +195,8 @@ begin
 					mclr = "green9"
 					lclr = "green3"
 				end
-				axs[6].scatter(prcpμ,conWTG,c=mclr,s=20,zorder=5)
-				axs[6].errorbar(prcpμ,conWTG,0,prcpσ,c=lclr,zorder=4)
+				axs[4].scatter(prcpμ,conWTG,c=mclr,s=20,zorder=5)
+				axs[4].errorbar(prcpμ,conWTG,0,prcpσ,c=lclr,zorder=4)
 			end
 			
 		end
@@ -231,8 +231,8 @@ begin
 					mclr = "green9"
 					lclr = "green3"
 				end
-				axs[3].scatter(prcpμ,conWTG,c=mclr,s=20,zorder=5)
-				axs[3].errorbar(prcpμ,conWTG,0,prcpσ,c=lclr,zorder=4)
+				axs[1].scatter(prcpμ,conWTG,c=mclr,s=20,zorder=5)
+				axs[1].errorbar(prcpμ,conWTG,0,prcpσ,c=lclr,zorder=4)
 			end
 			
 		end
@@ -263,8 +263,8 @@ begin
 					mclr = "green9"
 					lclr = "green3"
 				end
-				axs[5].scatter(prcpμ,conWTG,c=mclr,s=20,zorder=5)
-				axs[5].errorbar(prcpμ,conWTG,0,prcpσ,c=lclr,zorder=4)
+				axs[3].scatter(prcpμ,conWTG,c=mclr,s=20,zorder=5)
+				axs[3].errorbar(prcpμ,conWTG,0,prcpσ,c=lclr,zorder=4)
 			end
 			
 		end
@@ -280,10 +280,10 @@ begin
 	axs[4].plot([1,1]*prcpRCEμ_T,[0,2000],c="grey")
 	axs[6].plot([1,1]*prcpRCEμ_T,[0,2000],c="grey")
 
-	axs[1].format(ltitle="(a) DGW",ylabel=L"$\alpha$")
-	axs[3].format(ltitle="(b) TGR",)
-	axs[5].format(ltitle="(c) SPC")
-	axs[6].format(ylabel=L"$\tau$ / hr")
+	axs[1].format(ltitle="(a) TGR",ylabel=L"$\tau$ / hr")
+	axs[3].format(ltitle="(b) SPC")
+	axs[5].format(ltitle="(c) DGW")
+	axs[6].format(ylabel=L"$\alpha$")
 
 	for ax in axs
 		ax.format(
@@ -300,10 +300,10 @@ begin
 		axs[ii].format(ultitle="(ii) Ideal")
 	end
 	
-	for ii in 1 : 2
+	for ii in 5 : 6
 		axs[ii].format(ylim=(0.005,2000),yscale="log")
 	end
-	for ii in 3 : 6
+	for ii in 1 : 4
 		axs[ii].format(ylim=(0.05,200),yscale="log")
 	end
 		
@@ -314,7 +314,7 @@ begin
 		)
 	end
 
-	for ii in 3 : 6
+	for ii in 5 : 6
 		axs[ii].format(ytickloc="r")
 	end
 		
@@ -328,9 +328,144 @@ begin
 	load(projectdir("figures","fig2-bifurcation.png"))
 end
 
+# ╔═╡ 5524195a-829e-454a-96d4-b0be76c5f684
+begin
+	pplt.close()
+	f2,a2 = pplt.subplots(ncols=3,aspect=0.3,axwidth=0.8,sharey=0,wspace=[1,2])
+
+	for conDGW in configDGW1
+
+		fnc = "DGW-P1282km300V64-$(dampingstrprnt(conDGW)).nc"
+		ds_dgwprcp = NCDataset(datadir("precipitation",fnc))
+
+		prcp  = ds_dgwprcp["precipitation"][:] / 24
+		for ien = 1 : 15
+
+			prcpii  = prcp[end-2399:end,ien]
+			prcpii  = prcpii[.!isnan.(prcpii)]
+			prcpμ   = mean(prcpii)
+			prcpσ   = zeros(2,1)
+
+			if !isnan(prcpμ)
+				prcpσ[1] = prcpμ - quantile(prcpii,0.05)
+				prcpσ[2] = quantile(prcpii,0.95) - prcpμ
+				if prcpμ < prcpRCEμ_P * 0.95
+					mclr = "yellow9"
+					lclr = "yellow3"
+				elseif prcpμ > prcpRCEμ_P / 0.95
+					mclr = "blue9"
+					lclr = "blue3"
+				else
+					mclr = "green9"
+					lclr = "green3"
+				end
+				a2[3].scatter(prcpμ,conDGW,c=mclr,s=20,zorder=5)
+				a2[3].errorbar(prcpμ,conDGW,0,prcpσ,c=lclr,zorder=4)
+			end
+			
+		end
+
+		close(ds_dgwprcp)
+
+	end
+
+	for conWTG in configWTG1
+
+		fnc = "TGR-P1282km300V64-$(relaxscalestrprnt(conWTG)).nc"
+		ds_wtgprcp = NCDataset(datadir("precipitation",fnc))
+
+		prcp  = ds_wtgprcp["precipitation"][:] / 24
+		for ien = 1 : 15
+
+			prcpii  = prcp[end-2399:end,ien]
+			prcpii  = prcpii[.!isnan.(prcpii)]
+			prcpμ   = mean(prcpii)
+			prcpσ   = zeros(2,1)
+
+			if !isnan(prcpμ)
+				prcpσ[1] = prcpμ - quantile(prcpii,0.05)
+				prcpσ[2] = quantile(prcpii,0.95) - prcpμ
+				if prcpμ < prcpRCEμ_P * 0.95
+					mclr = "yellow9"
+					lclr = "yellow3"
+				elseif prcpμ > prcpRCEμ_P / 0.95
+					mclr = "blue9"
+					lclr = "blue3"
+				else
+					mclr = "green9"
+					lclr = "green3"
+				end
+				a2[1].scatter(prcpμ,conWTG,c=mclr,s=20,zorder=5)
+				a2[1].errorbar(prcpμ,conWTG,0,prcpσ,c=lclr,zorder=4)
+			end
+			
+		end
+
+		close(ds_wtgprcp)
+
+		fnc = "SPC-P1282km300V64-$(relaxscalestrprnt(conWTG)).nc"
+		ds_wtgprcp = NCDataset(datadir("precipitation",fnc))
+
+		prcp  = ds_wtgprcp["precipitation"][:] / 24
+		for ien = 1 : 15
+
+			prcpii  = prcp[end-2399:end,ien]
+			prcpii  = prcpii[.!isnan.(prcpii)]
+			prcpμ   = mean(prcpii)
+			prcpσ   = zeros(2,1)
+
+			if !isnan(prcpμ)
+				prcpσ[1] = prcpμ - quantile(prcpii,0.05)
+				prcpσ[2] = quantile(prcpii,0.95) - prcpμ
+				if prcpμ < prcpRCEμ_P * 0.95
+					mclr = "yellow9"
+					lclr = "yellow3"
+				elseif prcpμ > prcpRCEμ_P / 0.95
+					mclr = "blue9"
+					lclr = "blue3"
+				else
+					mclr = "green9"
+					lclr = "green3"
+				end
+				a2[2].scatter(prcpμ,conWTG,c=mclr,s=20,zorder=5)
+				a2[2].errorbar(prcpμ,conWTG,0,prcpσ,c=lclr,zorder=4)
+			end
+			
+		end
+
+		close(ds_wtgprcp)
+
+	end
+	
+	a2[1].plot([1,1]*prcpRCEμ_P,[0,2000],c="grey")
+	a2[2].plot([1,1]*prcpRCEμ_P,[0,2000],c="grey")
+	a2[3].plot([1,1]*prcpRCEμ_P,[0,2000],c="grey")
+
+	for ax in a2
+		ax.format(
+			xscale="symlog",xscale_kw=Dict("linthresh"=>0.01),
+			xlim=(0,2),xlabel=L"Precipitation Rate / mm hr$^{-1}$",
+			lrtitle="Wet",lltitle="Dry"
+		)
+	end
+	
+	for ii in 1 : 2
+		a2[ii].format(ylim=(0.5,100),yscale="log")
+	end
+
+	a2[3].format(ltitle="(c) DGW",ylabel=L"$\alpha$",ylim=(0.05,1000),yscale="log",ytickloc="r",suptitle="RRTM Radiation")
+	a2[1].format(ltitle="(a) TGR",ylabel=L"$\tau$ / hr")
+	a2[2].format(ltitle="(b) SPC",yticklabels=["","","",""],ytickminor=10:10:100,
+			xlabel=L"Hourly-Averaged Precipitation Rate / mm hr$^{-1}$",xlim=(0,2))
+	
+	f2.savefig(plotsdir("aogs-bifurcation-P.png"),transparent=false,dpi=400)
+	load(plotsdir("aogs-bifurcation-P.png"))
+end
+
 # ╔═╡ Cell order:
 # ╟─e78a75c2-590f-11eb-1144-9127b0309135
 # ╟─681658b0-5914-11eb-0d65-bbace277d145
 # ╟─6dce35fc-5914-11eb-0ce2-0d4e164e1898
 # ╟─3c16bd2b-55e0-492f-baf3-aef6a998e9d6
 # ╟─57bbb1c8-e0f8-4b49-8f55-86af376c5167
+# ╠═5524195a-829e-454a-96d4-b0be76c5f684
