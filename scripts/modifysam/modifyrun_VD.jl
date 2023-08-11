@@ -10,6 +10,9 @@ avec = [1  1   1   1    1   1   1  1 0.5 0]
 bvec = [0 0.1 0.2 0.25 0.3 0.4 0.5 1  1  1]
 nexp = length(avec)
 
+mrun = projectdir("run","modifysam","runtemplates","modelrun.sh")
+brun = projectdir("run","modifysam","runtemplates","Build.csh")
+
 open(mrun,"r") do frun
     s = read(frun,String)
     for iexp in 1 : nexp
