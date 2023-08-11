@@ -3,8 +3,8 @@ using DrWatson
 using Logging
 using Printf
 
-schname = "VDT"
-expname = "S1282km300V64"
+schname = "VDD"
+expname = "T1282km300V64"
 
 tprm  = projectdir("exp","tmp.prm")
 avec = [1  1   1   1    1   1   1  1 0.5 0]
