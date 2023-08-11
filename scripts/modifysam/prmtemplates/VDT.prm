@@ -84,7 +84,7 @@ rad3Dout     = .true.,
 &KUANG_PARAMS
 
 doradtendency = .true.,
-dobulksfcflx  = .true.,
+dobulksfcflx  = .false.,
 bulksfcflx_u  = 5.
 
 dowtg_blossey_etal_JAMES2009  = .false.
