@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.25
+# v0.19.26
 
 using Markdown
 using InteractiveUtils
@@ -49,45 +49,68 @@ begin
 		[1,1,1,2,3,3,3,4],aspect=1.5,axwidth=2,wspace=[0,0,0,3,0,0,0],sharex=0
 	)
 
-	ds_rce = NCDataset(datadir("precipitation","RCE-S1284km300V64.nc"))
-	prcp = ds_rce["precipitation"][1:1000,:] / 24
+	ds_rce = NCDataset(datadir("precipitation","RCE-T1282km300V64.nc"))
+	prcp = mean(ds_rce["precipitation"][:]) / 24
 	close(ds_rce)
-	axs[1].plot([0,1],[1,1]*mean(prcp[(end-499):end]),c="grey",lw=1)
-	axs[2].plot([0,1],[1,1]*mean(prcp[(end-499):end]),c="grey",lw=1)
-	axs[3].plot([0,1],[1,1]*mean(prcp[(end-499):end]),c="grey",lw=1)
-	axs[4].plot([0,1],[1,1]*mean(prcp[(end-499):end]),c="grey",lw=1)
+	axs[1].plot([0,1],[1,1]*prcp,c="grey",lw=1)
+	axs[2].plot([0,1],[1,1]*prcp,c="grey",lw=1)
+	axs[3].plot([0,1],[1,1]*prcp,c="grey",lw=1)
+	axs[4].plot([0,1],[1,1]*prcp,c="grey",lw=1)
 
 	for iexp in 1 : (nexp-2)
 		expname = "H$(@sprintf("%4.2f",hvec[iexp]))F$(@sprintf("%4.2f",fvec[iexp]))"
         expname = replace(expname,"."=>"d")
 
-		ds_dgw  = NCDataset(datadir("precipitation","VDD-$expname.nc"))
+		ds_dgw  = NCDataset(datadir("precipitation","VDD-T1282km300V64-$expname.nc"))
 		prcpdgw = ds_dgw["precipitation"][:]/24
 		close(ds_dgw)
 
-		ds_wtg  = NCDataset(datadir("precipitation","VDT-$expname.nc"))
+		ds_wtg  = NCDataset(datadir("precipitation","VDT-T1282km300V64-$expname.nc"))
 		prcpwtg = ds_wtg["precipitation"][:]/24
 		close(ds_wtg)
+		
+		prcpσ   = zeros(2,1)
 
 		for ien = 1 : 15
 
-			prcpdgwii = prcpdgw[end-1000:end,ien]
-			prcpdgwii = mean(prcpdgwii[.!isnan.(prcpdgwii)])
-			prcpwtgii = prcpwtg[end-1000:end,ien]
-			prcpwtgii = mean(prcpwtgii[.!isnan.(prcpwtgii)])
+			prcpii = prcpdgw[end-1000:end,ien]
+			prcpμ  = mean(prcpii[.!isnan.(prcpii)])
 
-			if (ien >= 6) && (ien <= 10)
-				clr = "yellow7"
-			else
-				clr = "blue5"
+			if !isnan(prcpμ)
+				prcpσ[1] = prcpμ - quantile(prcpii,0.05)
+				prcpσ[2] = quantile(prcpii,0.95) - prcpμ
+				if prcpμ < prcp * 0.95
+					mclr = "yellow9"
+					lclr = "yellow3"
+				elseif prcpμ > prcp / 0.95
+					mclr = "blue9"
+					lclr = "blue3"
+				else
+					mclr = "green9"
+					lclr = "green3"
+				end
+				axs[1].scatter(fvec[iexp],prcpμ,c=mclr,s=20,zorder=5)
+				axs[1].errorbar(fvec[iexp],prcpμ,prcpσ,0,c=lclr,zorder=4)
 			end
+			
+			prcpii = prcpwtg[end-1000:end,ien]
+			prcpμ  = mean(prcpii[.!isnan.(prcpii)])
 
-			if ien <= 5
-				axs[1].plot(fvec[iexp],prcpdgwii,marker=".",c="k",ms=4)
-				axs[3].plot(fvec[iexp],prcpwtgii,marker=".",c="k",ms=4)
-			else
-				axs[1].scatter(fvec[iexp],prcpdgwii,c=clr,alpha=0.1,s=50)
-				axs[3].scatter(fvec[iexp],prcpwtgii,c=clr,alpha=0.1,s=50)
+			if !isnan(prcpμ)
+				prcpσ[1] = prcpμ - quantile(prcpii,0.05)
+				prcpσ[2] = quantile(prcpii,0.95) - prcpμ
+				if prcpμ < prcp * 0.95
+					mclr = "yellow9"
+					lclr = "yellow3"
+				elseif prcpμ > prcp / 0.95
+					mclr = "blue9"
+					lclr = "blue3"
+				else
+					mclr = "green9"
+					lclr = "green3"
+				end
+				axs[3].scatter(fvec[iexp],prcpμ,c=mclr,s=20,zorder=5)
+				axs[3].errorbar(fvec[iexp],prcpμ,prcpσ,0,c=lclr,zorder=4)
 			end
 
 		end
@@ -98,33 +121,56 @@ begin
 		expname = "H$(@sprintf("%4.2f",hvec[iexp]))F$(@sprintf("%4.2f",fvec[iexp]))"
         expname = replace(expname,"."=>"d")
 
-		ds_dgw  = NCDataset(datadir("precipitation","VDD-$expname.nc"))
+		ds_dgw  = NCDataset(datadir("precipitation","VDD-T1282km300V64-$expname.nc"))
 		prcpdgw = ds_dgw["precipitation"][:]/24
 		close(ds_dgw)
 
-		ds_wtg  = NCDataset(datadir("precipitation","VDT-$expname.nc"))
+		ds_wtg  = NCDataset(datadir("precipitation","VDT-T1282km300V64-$expname.nc"))
 		prcpwtg = ds_wtg["precipitation"][:]/24
 		close(ds_wtg)
+		
+		prcpσ   = zeros(2,1)
 
 		for ien = 1 : 15
 
-			prcpdgwii = prcpdgw[end-1000:end,ien]
-			prcpdgwii = mean(prcpdgwii[.!isnan.(prcpdgwii)])
-			prcpwtgii = prcpwtg[end-1000:end,ien]
-			prcpwtgii = mean(prcpwtgii[.!isnan.(prcpwtgii)])
+			prcpii = prcpdgw[end-1000:end,ien]
+			prcpμ  = mean(prcpii[.!isnan.(prcpii)])
 
-			if (ien >= 6) && (ien <= 10)
-				clr = "yellow7"
-			else
-				clr = "blue5"
+			if !isnan(prcpμ)
+				prcpσ[1] = prcpμ - quantile(prcpii,0.05)
+				prcpσ[2] = quantile(prcpii,0.95) - prcpμ
+				if prcpμ < prcp * 0.95
+					mclr = "yellow9"
+					lclr = "yellow3"
+				elseif prcpμ > prcp / 0.95
+					mclr = "blue9"
+					lclr = "blue3"
+				else
+					mclr = "green9"
+					lclr = "green3"
+				end
+				axs[1].scatter(0.6,prcpμ,c=mclr,s=20,zorder=5)
+				axs[1].errorbar(0.6,prcpμ,prcpσ,0,c=lclr,zorder=4)
 			end
 
-			if ien <= 5
-				axs[1].plot(0.6,prcpdgwii,marker=".",c="k",ms=4)
-				axs[3].plot(0.6,prcpwtgii,marker=".",c="k",ms=4)
-			else
-				axs[1].scatter(0.6,prcpdgwii,c=clr,alpha=0.1,s=50)
-				axs[3].scatter(0.6,prcpwtgii,c=clr,alpha=0.1,s=50)
+			prcpii = prcpwtg[end-1000:end,ien]
+			prcpμ  = mean(prcpii[.!isnan.(prcpii)])
+
+			if !isnan(prcpμ)
+				prcpσ[1] = prcpμ - quantile(prcpii,0.05)
+				prcpσ[2] = quantile(prcpii,0.95) - prcpμ
+				if prcpμ < prcp * 0.95
+					mclr = "yellow9"
+					lclr = "yellow3"
+				elseif prcpμ > prcp / 0.95
+					mclr = "blue9"
+					lclr = "blue3"
+				else
+					mclr = "green9"
+					lclr = "green3"
+				end
+				axs[3].scatter(0.6,prcpμ,c=mclr,s=20,zorder=5)
+				axs[3].errorbar(0.6,prcpμ,prcpσ,0,c=lclr,zorder=4)
 			end
 
 		end
@@ -135,33 +181,56 @@ begin
 		expname = "H$(@sprintf("%4.2f",hvec[iexp]))F$(@sprintf("%4.2f",fvec[iexp]))"
         expname = replace(expname,"."=>"d")
 
-		ds_dgw  = NCDataset(datadir("precipitation","VDD-$expname.nc"))
+		ds_dgw  = NCDataset(datadir("precipitation","VDD-T1282km300V64-$expname.nc"))
 		prcpdgw = ds_dgw["precipitation"][:]/24
 		close(ds_dgw)
 
-		ds_wtg  = NCDataset(datadir("precipitation","VDT-$expname.nc"))
+		ds_wtg  = NCDataset(datadir("precipitation","VDT-T1282km300V64-$expname.nc"))
 		prcpwtg = ds_wtg["precipitation"][:]/24
 		close(ds_wtg)
+		
+		prcpσ   = zeros(2,1)
 
 		for ien = 1 : 15
 
-			prcpdgwii = prcpdgw[end-1000:end,ien]
-			prcpdgwii = mean(prcpdgwii[.!isnan.(prcpdgwii)])
-			prcpwtgii = prcpwtg[end-1000:end,ien]
-			prcpwtgii = mean(prcpwtgii[.!isnan.(prcpwtgii)])
+			prcpii = prcpdgw[end-1000:end,ien]
+			prcpμ  = mean(prcpii[.!isnan.(prcpii)])
 
-			if (ien >= 6) && (ien <= 10)
-				clr = "yellow7"
-			else
-				clr = "blue5"
+			if !isnan(prcpμ)
+				prcpσ[1] = prcpμ - quantile(prcpii,0.05)
+				prcpσ[2] = quantile(prcpii,0.95) - prcpμ
+				if prcpμ < prcp * 0.95
+					mclr = "yellow9"
+					lclr = "yellow3"
+				elseif prcpμ > prcp / 0.95
+					mclr = "blue9"
+					lclr = "blue3"
+				else
+					mclr = "green9"
+					lclr = "green3"
+				end
+				axs[2].scatter(hvec[iexp],prcpμ,c=mclr,s=20,zorder=5)
+				axs[2].errorbar(hvec[iexp],prcpμ,prcpσ,0,c=lclr,zorder=4)
 			end
 
-			if ien <= 5
-				axs[2].plot(hvec[iexp],prcpdgwii,marker=".",c="k",ms=4)
-				axs[4].plot(hvec[iexp],prcpwtgii,marker=".",c="k",ms=4)
-			else
-				axs[2].scatter(hvec[iexp],prcpdgwii,c=clr,alpha=0.1,s=50)
-				axs[4].scatter(hvec[iexp],prcpwtgii,c=clr,alpha=0.1,s=50)
+			prcpii = prcpwtg[end-1000:end,ien]
+			prcpμ  = mean(prcpii[.!isnan.(prcpii)])
+
+			if !isnan(prcpμ)
+				prcpσ[1] = prcpμ - quantile(prcpii,0.05)
+				prcpσ[2] = quantile(prcpii,0.95) - prcpμ
+				if prcpμ < prcp * 0.95
+					mclr = "yellow9"
+					lclr = "yellow3"
+				elseif prcpμ > prcp / 0.95
+					mclr = "blue9"
+					lclr = "blue3"
+				else
+					mclr = "green9"
+					lclr = "green3"
+				end
+				axs[4].scatter(hvec[iexp],prcpμ,c=mclr,s=20,zorder=5)
+				axs[4].errorbar(hvec[iexp],prcpμ,prcpσ,0,c=lclr,zorder=4)
 			end
 
 		end
@@ -197,7 +266,7 @@ begin
 		xlim=(1,0),urtitle=L"(b) $c_2 = 1$",
 		xlabel=L"c_1",xlocator=0:0.5:1,
 	)
-	axs[2].format(ylim=(0,1.25),ylabel=L"Rain Rate / mm hr$^{-1}$")
+	axs[2].format(ylim=(0,1),ylabel=L"Rain Rate / mm hr$^{-1}$")
 	
 	fig.savefig(projectdir("figures","fig4-baroclinicmodes.png"),transparent=false,dpi=400)
 	load(projectdir("figures","fig4-baroclinicmodes.png"))
