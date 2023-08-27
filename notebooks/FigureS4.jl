@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.26
+# v0.19.27
 
 using Markdown
 using InteractiveUtils
@@ -53,53 +53,12 @@ end
 # ╠═╡ show_logs = false
 begin
 	pplt.close()
-	fig,axs = pplt.subplots(ncols=6,aspect=0.3,axwidth=0.8,sharey=0,wspace=[1,3,1,1,1])
-
-	ds_rceprcp = NCDataset(datadir("precipitation","RCE-P1282km300V64.nc"))
-	prcp_RCE = ds_rceprcp["precipitation"][:] / 24
-	prcpRCEμ_P = mean(prcp_RCE[1001:2000,:])
-	close(ds_rceprcp)
+	fig,axs = pplt.subplots(ncols=4,aspect=0.3,axwidth=0.8,sharey=0,wspace=[1,1,3])
 
 	ds_rceprcp = NCDataset(datadir("precipitation","RCE-T1282km300V64.nc"))
 	prcp_RCE = ds_rceprcp["precipitation"][:] / 24
 	prcpRCEμ_T = mean(prcp_RCE[1001:2000,:])
 	close(ds_rceprcp)
-
-	for conDGW in configDGW1
-
-		fnc = "DGW-P1282km300V64-$(dampingstrprnt(conDGW)).nc"
-		ds_dgwprcp = NCDataset(datadir("precipitation",fnc))
-
-		prcp  = ds_dgwprcp["precipitation"][:] / 24
-		for ien = 1 : 15
-
-			prcpii  = prcp[end-2399:end,ien]
-			prcpii  = prcpii[.!isnan.(prcpii)]
-			prcpμ   = mean(prcpii)
-			prcpσ   = zeros(2,1)
-
-			if !isnan(prcpμ)
-				prcpσ[1] = prcpμ - quantile(prcpii,0.05)
-				prcpσ[2] = quantile(prcpii,0.95) - prcpμ
-				if prcpμ < prcpRCEμ_P * 0.95
-					mclr = "yellow9"
-					lclr = "yellow3"
-				elseif prcpμ > prcpRCEμ_P / 0.95
-					mclr = "blue9"
-					lclr = "blue3"
-				else
-					mclr = "green9"
-					lclr = "green3"
-				end
-				axs[1].scatter(prcpμ,conDGW,c=mclr,s=20,zorder=5)
-				axs[1].errorbar(prcpμ,conDGW,0,prcpσ,c=lclr,zorder=4)
-			end
-			
-		end
-
-		close(ds_dgwprcp)
-
-	end
 
 	for conDGW in configDGW2
 
@@ -127,8 +86,8 @@ begin
 					mclr = "green9"
 					lclr = "green3"
 				end
-				axs[2].scatter(prcpμ,conDGW,c=mclr,s=20,zorder=5)
-				axs[2].errorbar(prcpμ,conDGW,0,prcpσ,c=lclr,zorder=4)
+				axs[4].scatter(prcpμ,conDGW,c=mclr,s=20,zorder=5)
+				axs[4].errorbar(prcpμ,conDGW,0,prcpσ,c=lclr,zorder=4)
 			end
 			
 		end
@@ -139,7 +98,7 @@ begin
 
 	for conWTG in configWTG2
 
-		fnc = "TGR-T1282km300V64-$(relaxscalestrprnt(conWTG)).nc"
+		fnc = "SP2-T1282km300V64-$(relaxscalestrprnt(conWTG)).nc"
 		ds_wtgprcp = NCDataset(datadir("precipitation",fnc))
 
 		prcp  = ds_wtgprcp["precipitation"][:] / 24
@@ -163,8 +122,8 @@ begin
 					mclr = "green9"
 					lclr = "green3"
 				end
-				axs[4].scatter(prcpμ,conWTG,c=mclr,s=20,zorder=5)
-				axs[4].errorbar(prcpμ,conWTG,0,prcpσ,c=lclr,zorder=4)
+				axs[3].scatter(prcpμ,conWTG,c=mclr,s=20,zorder=5)
+				axs[3].errorbar(prcpμ,conWTG,0,prcpσ,c=lclr,zorder=4)
 			end
 			
 		end
@@ -195,19 +154,15 @@ begin
 					mclr = "green9"
 					lclr = "green3"
 				end
-				axs[6].scatter(prcpμ,conWTG,c=mclr,s=20,zorder=5)
-				axs[6].errorbar(prcpμ,conWTG,0,prcpσ,c=lclr,zorder=4)
+				axs[2].scatter(prcpμ,conWTG,c=mclr,s=20,zorder=5)
+				axs[2].errorbar(prcpμ,conWTG,0,prcpσ,c=lclr,zorder=4)
 			end
 			
 		end
 
 		close(ds_wtgprcp)
 
-	end
-
-	for conWTG in configWTG1
-
-		fnc = "TGR-P1282km300V64-$(relaxscalestrprnt(conWTG)).nc"
+		fnc = "TGR-T1282km300V64-$(relaxscalestrprnt(conWTG)).nc"
 		ds_wtgprcp = NCDataset(datadir("precipitation",fnc))
 
 		prcp  = ds_wtgprcp["precipitation"][:] / 24
@@ -221,50 +176,18 @@ begin
 			if !isnan(prcpμ)
 				prcpσ[1] = prcpμ - quantile(prcpii,0.05)
 				prcpσ[2] = quantile(prcpii,0.95) - prcpμ
-				if prcpμ < prcpRCEμ_P * 0.95
+				if prcpμ < prcpRCEμ_T * 0.95
 					mclr = "yellow9"
 					lclr = "yellow3"
-				elseif prcpμ > prcpRCEμ_P / 0.95
+				elseif prcpμ > prcpRCEμ_T / 0.95
 					mclr = "blue9"
 					lclr = "blue3"
 				else
 					mclr = "green9"
 					lclr = "green3"
 				end
-				axs[3].scatter(prcpμ,conWTG,c=mclr,s=20,zorder=5)
-				axs[3].errorbar(prcpμ,conWTG,0,prcpσ,c=lclr,zorder=4)
-			end
-			
-		end
-
-		close(ds_wtgprcp)
-
-		fnc = "SPC-P1282km300V64-$(relaxscalestrprnt(conWTG)).nc"
-		ds_wtgprcp = NCDataset(datadir("precipitation",fnc))
-
-		prcp  = ds_wtgprcp["precipitation"][:] / 24
-		for ien = 1 : 15
-
-			prcpii  = prcp[end-2399:end,ien]
-			prcpii  = prcpii[.!isnan.(prcpii)]
-			prcpμ   = mean(prcpii)
-			prcpσ   = zeros(2,1)
-
-			if !isnan(prcpμ)
-				prcpσ[1] = prcpμ - quantile(prcpii,0.05)
-				prcpσ[2] = quantile(prcpii,0.95) - prcpμ
-				if prcpμ < prcpRCEμ_P * 0.95
-					mclr = "yellow9"
-					lclr = "yellow3"
-				elseif prcpμ > prcpRCEμ_P / 0.95
-					mclr = "blue9"
-					lclr = "blue3"
-				else
-					mclr = "green9"
-					lclr = "green3"
-				end
-				axs[5].scatter(prcpμ,conWTG,c=mclr,s=20,zorder=5)
-				axs[5].errorbar(prcpμ,conWTG,0,prcpσ,c=lclr,zorder=4)
+				axs[1].scatter(prcpμ,conWTG,c=mclr,s=20,zorder=5)
+				axs[1].errorbar(prcpμ,conWTG,0,prcpσ,c=lclr,zorder=4)
 			end
 			
 		end
@@ -273,17 +196,15 @@ begin
 
 	end
 	
-	axs[1].plot([1,1]*prcpRCEμ_P,[0,2000],c="grey")
-	axs[3].plot([1,1]*prcpRCEμ_P,[0,2000],c="grey")
-	axs[5].plot([1,1]*prcpRCEμ_P,[0,2000],c="grey")
+	axs[1].plot([1,1]*prcpRCEμ_T,[0,2000],c="grey")
 	axs[2].plot([1,1]*prcpRCEμ_T,[0,2000],c="grey")
+	axs[3].plot([1,1]*prcpRCEμ_T,[0,2000],c="grey")
 	axs[4].plot([1,1]*prcpRCEμ_T,[0,2000],c="grey")
-	axs[6].plot([1,1]*prcpRCEμ_T,[0,2000],c="grey")
 
-	axs[1].format(ltitle="(a) DGW",ylabel=L"$\alpha$")
-	axs[3].format(ltitle="(b) TGR",)
-	axs[5].format(ltitle="(c) SPC")
-	axs[6].format(ylabel=L"$\tau$ / hr")
+	axs[4].format(ltitle="(d) DGW",ylabel=L"$\alpha$",ylim=(0.005,2000),yscale="log",ytickloc="r")
+	axs[3].format(ltitle="(c) SP2")
+	axs[2].format(ltitle="(b) SPC")
+	axs[1].format(ltitle="(a) TGR",ylabel=L"$\tau$ / hr")
 
 	for ax in axs
 		ax.format(
@@ -292,30 +213,16 @@ begin
 			lrtitle="Wet",lltitle="Dry"
 		)
 	end
-
-	for ii in 1 : 2 : 5
-		axs[ii].format(ultitle="(i) RRTM")
-	end
-	for ii in 2 : 2 : 6
-		axs[ii].format(ultitle="(ii) Ideal")
-	end
 	
-	for ii in 1 : 2
-		axs[ii].format(ylim=(0.005,2000),yscale="log")
-	end
-	for ii in 3 : 6
+	for ii in 1 : 3
 		axs[ii].format(ylim=(0.05,200),yscale="log")
 	end
 		
-	for ii in 2 : 5
+	for ii in 2 : 3
 		axs[ii].format(
 			yticklabels=["","","",""],ytickminor=10:10:100,
 			xlabel=L"Hourly-Averaged Precipitation Rate / mm hr$^{-1}$",xlim=(0,2)
 		)
-	end
-
-	for ii in 3 : 6
-		axs[ii].format(ytickloc="r")
 	end
 	
 	fig.savefig(projectdir("figures","figS4-spectraljpower.png"),transparent=false,dpi=400)
