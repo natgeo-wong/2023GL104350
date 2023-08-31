@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.19.26
+# v0.19.27
 
 using Markdown
 using InteractiveUtils
@@ -59,8 +59,8 @@ end
 begin
 	w1_wet = 0.1*sin.(zz*pi);   w1_wet[zz.>1] .= 0
 	w2_wet = 0.1*sin.(zz*2*pi); w2_wet[zz.>1] .= 0
-	w1_dry = 0.1*sin.(zz*pi);   w1_dry[zz.>1] .= 0
-	w2_dry = 0.1*sin.(zz*2*pi); w2_dry[zz.>1] .= 0
+	w1_dry = -0.07*sin.(zz*pi);   w1_dry[zz.>1] .= 0
+	w2_dry = -0.07*sin.(zz*2*pi); w2_dry[zz.>1] .= 0
 end
 
 # ╔═╡ 6e71c910-87ba-49cf-bfc2-33d2c5323051
@@ -75,7 +75,7 @@ begin
 	)
 	
 	axs[1].plot(c="blue6", alpha=0.5,w1_wet,zz,label=L"$w_H$ (Moist)",legend="b")
-	axs[1].plot(c="green6",alpha=0.5,w2_wet,zz,label=L"$w_F$ (Congestus)",legend="b",legend_kw=lgd)
+	axs[1].plot(c="yellow6",alpha=0.5,w2_dry,zz,label=L"$w_F$ (Stratiform)",legend="b",legend_kw=lgd)
 	axs[1].format(xlocator=[0],ultitle="(a)")
 
 	axs[2].plot(id_mse,zz,c="k",label="h",legend="b",legend_kw=lgd)
@@ -86,8 +86,8 @@ begin
 	axs[3].plot(id_gdse,zz,c="gray",linestyle="--",label=L"\partial_zs",legend="b")
 	axs[3].format(xlocator=[0],ultitle="(b2)")
 
-	axs[5].plot(id_gmse.*w2_wet.*25,zz,c="green6",label=L"w_F \cdot \partial_zh",legend="b",legend_kw=lgd)
-	axs[5].plot(id_gdse.*w2_wet.*25,zz,c="green2",linestyle="--",label=L"w_F \cdot \partial_zs",legend="b")
+	axs[5].plot(id_gmse.*w2_dry.*25,zz,c="yellow6",label=L"w_F \cdot \partial_zh",legend="b",legend_kw=lgd)
+	axs[5].plot(id_gdse.*w2_dry.*25,zz,c="yellow2",linestyle="--",label=L"w_F \cdot \partial_zs",legend="b")
 	axs[5].format(xlocator=[0],ultitle="(c2)")
 
 	axs[4].plot(id_gmse.*w1_wet.*25,zz,c="blue6",label=L"w_H \cdot \partial_zh",legend="b",legend_kw=lgd)

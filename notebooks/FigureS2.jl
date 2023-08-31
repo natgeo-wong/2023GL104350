@@ -31,14 +31,13 @@ end
 
 # ╔═╡ e78a75c2-590f-11eb-1144-9127b0309135
 md"
-# Figure S2. Time Series, Idealised Radiation
+# Figure S2. Time Series, Full Radiation
 "
 
 # ╔═╡ a63de98c-5b35-11eb-0a8f-b7a1ebd441b6
 begin
-	configDGW = [0.02,0.05,0.1,0.2,0.5,1,2,5,10,20,50,100,200,500]
+	configDGW = [0.2,0.5,1,2,5,10,20,50,100,200,500]
 	configWTG = [
-		0.1*sqrt(2),0.2,0.2*sqrt(2.5),0.5,0.5*sqrt(2),1,
 		sqrt(2),2,2*sqrt(2.5),5,5*sqrt(2),10,
 		10*sqrt(2),20,20*sqrt(2.5),50,50*sqrt(2)
 	]
@@ -46,8 +45,8 @@ begin
 	nconWTG = length(configWTG)
 	blues_DGW = pplt.get_colors("Blues",(nconDGW+2))
 	blues_WTG = pplt.get_colors("Blues",(nconWTG+2))
-	lgd_DGW = Dict("frame"=>false,"ncols"=>3)
-	lgd_WTG = Dict("frame"=>false,"ncols"=>3)
+	lgd_DGW = Dict("frame"=>false,"ncols"=>2)
+	lgd_WTG = Dict("frame"=>false,"ncols"=>2)
 	md"Loading time dimension and defining the damping experiments ..."
 end
 
@@ -58,7 +57,7 @@ begin
 
 	for ic in 1 : nconDGW
 
-		fnc = "DGW-T1282km300V64-$(dampingstrprnt(configDGW[ic])).nc"
+		fnc = "DGW-P1282km300V64-$(dampingstrprnt(configDGW[ic])).nc"
 		ds_dgwprcp = NCDataset(datadir("precipitation",fnc))
 
 		tdgw    = ds_dgwprcp["time"][:]; tdgw = reshape(tdgw,24,:)
@@ -91,7 +90,7 @@ begin
 
 	for ic in 1 : nconWTG
 
-		fnc = "TGR-T1282km300V64-$(relaxscalestrprnt(configWTG[ic])).nc"
+		fnc = "TGR-P1282km300V64-$(relaxscalestrprnt(configWTG[ic])).nc"
 		ds_wtgprcp = NCDataset(datadir("precipitation",fnc))
 
 		twtg    = ds_wtgprcp["time"][:]; twtg = reshape(twtg,24,:)
@@ -121,7 +120,7 @@ begin
 		close(ds_wtgprcp)
 
 
-		fnc = "SPC-T1282km300V64-$(relaxscalestrprnt(configWTG[ic])).nc"
+		fnc = "SPC-P1282km300V64-$(relaxscalestrprnt(configWTG[ic])).nc"
 		ds_wtgprcp = NCDataset(datadir("precipitation",fnc))
 
 		twtg    = ds_wtgprcp["time"][:]; twtg = reshape(twtg,24,:)
@@ -152,7 +151,7 @@ begin
 
 	end
 
-	ds_rceprcp = NCDataset(datadir("precipitation","RCE-T1282km300V64.nc"))
+	ds_rceprcp = NCDataset(datadir("precipitation","RCE-P1282km300V64.nc"))
 
 	t_RCE = ds_rceprcp["time"][:]
 	prcp_RCE = ds_rceprcp["precipitation"][:] / 24
@@ -171,14 +170,14 @@ begin
 	
 	for ax in ats
 		ax.format(
-			xlim=(000,250),#yscale="symlog",yscale_kw=Dict("linthresh"=>0.01),
-			ylim=(0,0.6),
+			xlim=(000,250),yscale="symlog",yscale_kw=Dict("linthresh"=>0.1),
+			ylim=(0,2),
 			ylabel=L"Daily-Averaged Rainfall Rate / mm hr$^{-1}$",xlabel="Days"
 		)
 	end
 	
-	fts.savefig(projectdir("figures","figS2-timeseries-T1282km300V64.png"),transparent=false,dpi=400)
-	load(projectdir("figures","figS2-timeseries-T1282km300V64.png"))
+	fts.savefig(projectdir("figures","figS2-timeseries-P1282km300V64.png"),transparent=false,dpi=400)
+	load(projectdir("figures","figS2-timeseries-P1282km300V64.png"))
 end
 
 # ╔═╡ Cell order:
@@ -186,4 +185,4 @@ end
 # ╟─681658b0-5914-11eb-0d65-bbace277d145
 # ╟─6dce35fc-5914-11eb-0ce2-0d4e164e1898
 # ╟─a63de98c-5b35-11eb-0a8f-b7a1ebd441b6
-# ╠═864f1d31-c629-412b-825a-98fe9398b591
+# ╟─864f1d31-c629-412b-825a-98fe9398b591
