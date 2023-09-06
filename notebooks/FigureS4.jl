@@ -30,7 +30,7 @@ end
 
 # ╔═╡ e78a75c2-590f-11eb-1144-9127b0309135
 md"
-# Figure 2. Varying WTG Strengths
+# Figure S4. Power of Higher-Order Baroclinic Modes
 "
 
 # ╔═╡ 3c16bd2b-55e0-492f-baf3-aef6a998e9d6
