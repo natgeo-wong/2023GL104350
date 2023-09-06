@@ -9,10 +9,7 @@ This project will also contain the necessary experimental setup files, so that
 anyone who wants will be able to run the model to get all the output.  They can
 then explore the full range of the project themselves.
 
-It is unconfirmed, but if the necessary data required to extract the data is small
-enough, then the data will be ported over to this repository as well.  Otherwise,
-the data will be uploaded to either Harvard Dataverse or to another GitHub repo,
-which will be linked here at a later date.
+The data for this project can be found at [here](https://doi.org/10.7910/DVN/YPXNPG) at the Harvard Dataverse.
 
 ## Instructions (to be updated later)
 
