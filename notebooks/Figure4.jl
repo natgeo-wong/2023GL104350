@@ -248,7 +248,7 @@ begin
 	end
 
 	axs[1].format(
-		xlabel=L"c_2",title=L"$a_m=10$ day$^{-1}$",
+		xlabel=L"c_2",title=L"$\alpha=10$",
 		ultitle=L"(a) $c_1 = 1$",
 		xlocator=0:0.1:0.5,xminorticks=0:0.02:0.5,xlim=(0,0.6)
 	)
@@ -258,7 +258,7 @@ begin
 	)
 
 	axs[3].format(
-		xlabel=L"c_2",title=L"$\tau=10$ hr",
+		xlabel=L"c_2",title=L"$\tau=25$ hr",
 		ultitle=L"(a) $c_1 = 1$",
 		xlocator=0:0.1:0.5,xminorticks=0:0.02:0.5,xlim=(0,0.6)
 	)
@@ -266,7 +266,7 @@ begin
 		xlim=(1,0),urtitle=L"(b) $c_2 = 1$",
 		xlabel=L"c_1",xlocator=0:0.5:1,
 	)
-	axs[2].format(ylim=(0,1),ylabel=L"Rain Rate / mm hr$^{-1}$")
+	axs[2].format(ylim=(0,0.75),ylabel=L"Rain Rate / mm hr$^{-1}$")
 	
 	fig.savefig(projectdir("figures","fig4-baroclinicmodes.png"),transparent=false,dpi=400)
 	load(projectdir("figures","fig4-baroclinicmodes.png"))
